@@ -8,18 +8,17 @@ uniform float pointRadius;
 in vec3 position;
 in vec4 colour;
 
-out Vertex {
-vec4 colour ;
+out Vertex{
+	vec4 colour;
 }OUT;
 
 void main(void) {
-	mat4 mvp = projMatrix * viewMatrix * modelMatrix;
-	gl_Position = mvp * vec4(position, 1.0);
+	vec4 posEye = viewMatrix * modelMatrix * vec4(position, 1.0);
+	gl_Position = projMatrix * posEye;
 	if (point == 1)
 	{
-		//vec3 posEye = vec3(gl_Position);
-		//float dist = length(posEye);
-		gl_PointSize = pointRadius*500;
-	}	
+		float dist = length(vec3(posEye));
+		gl_PointSize = pointRadius * 100000.0f / dist;
+	}
 	OUT.colour = colour;
 }

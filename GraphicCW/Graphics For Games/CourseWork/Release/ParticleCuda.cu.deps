@@ -378,7 +378,7 @@ c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\host_defines.h
 c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\vector_functions.h
 c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\device_launch_parameters.h
 c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\vector_types.h
-d:\visual studio 2013\cuda\graphiccw\common\inc\gl\freeglut_std.h
+d:\github\fluidsim\graphiccw\common\inc\gl\freeglut_std.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\windows.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\winapifamily.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\sdkddkver.h
@@ -484,7 +484,7 @@ C:\Program Files (x86)\Windows Kits\8.1\Include\um\imm.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\ime_cmodes.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\GL/gl.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\GL/glu.h
-d:\visual studio 2013\cuda\graphiccw\common\inc\gl\freeglut_ext.h
+d:\github\fluidsim\graphiccw\common\inc\gl\freeglut_ext.h
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cstdio
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\crtdefs.h
@@ -1167,9 +1167,9 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/system/d
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/system/cpp/detail/partition.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/system/cuda/detail/partition.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/detail/trivial_sequence.h
-d:\visual studio 2013\cuda\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh
+d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\math.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\cuda_runtime.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\math_constants.h
-d:\visual studio 2013\cuda\graphiccw\graphics for games\coursework\Parameters.cuh
+d:\github\fluidsim\graphiccw\graphics for games\coursework\Parameters.cuh
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\vector_types.h

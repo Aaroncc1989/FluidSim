@@ -136,7 +136,6 @@ void Particles::InitColor()
 	float *ptr = data;
 	for (uint i = 0; i<numParticles; i++)
 	{
-		//float t = i / (float)(numParticles);
 		*ptr++ = rand()/ (float)RAND_MAX;
 		*ptr++ = rand() / (float)RAND_MAX;
 		*ptr++ = rand() / (float)RAND_MAX;

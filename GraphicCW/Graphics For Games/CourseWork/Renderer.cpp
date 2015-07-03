@@ -44,7 +44,7 @@ void Renderer::RenderScene() {
 	glEnable(GL_DEPTH_TEST);
 	glUseProgram(currentShader->GetProgram());
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 0);
-	modelMatrix = Matrix4::Translation(Vector3(0, -60, 0)) * Matrix4::Scale(Vector3(200, 100, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(0, -52, 0)) * Matrix4::Scale(Vector3(200, 100, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	quad->Draw();
 
