@@ -44,20 +44,17 @@ void Renderer::RenderScene() {
 	glEnable(GL_DEPTH_TEST);
 	glUseProgram(currentShader->GetProgram());
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 0);
-	modelMatrix = Matrix4::Translation(Vector3(0, -50, 0)) * Matrix4::Scale(Vector3(200, 100, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(0, -60, 0)) * Matrix4::Scale(Vector3(200, 100, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	quad->Draw();
 
 	//glEnable(GL_POINT_SPRITE_ARB);
 	//glTexEnvi(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
-	//glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
-	glPointSize(10.0f);
-	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
+
 	modelMatrix = Matrix4::Translation(Vector3()) * Matrix4::Scale(Vector3(50,50,50)) * Matrix4::Rotation(0,Vector3(1.f,0,0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
-	//glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), 10);
+	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	UpdateShaderMatrices();
 	particle->DrawPoints();	
 

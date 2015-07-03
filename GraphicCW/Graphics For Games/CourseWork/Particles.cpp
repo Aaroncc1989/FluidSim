@@ -2,7 +2,6 @@
 #include "ParticleCuda.cuh"
 
 #include <cuda_runtime.h>
-
 #include <helper_functions.h>
 #include <helper_cuda.h>
 
@@ -57,9 +56,9 @@ void Particles::InitParticle()
 
 				if (i < numParticles)
 				{
-					pos[i * 4] = (mparams.radius* 2.f * x * 0.9f);
-					pos[i * 4 + 1] = (mparams.radius* 2.f * y *0.9f);
-					pos[i * 4 + 2] = (mparams.radius* 2.f * z*0.9f);
+					pos[i * 4] = (mparams.radius* 2.f * x * 0.9f)-1;
+					pos[i * 4 + 1] = (mparams.radius* 2.f * y *0.9f)-1;
+					pos[i * 4 + 2] = (mparams.radius* 2.f * z*0.9f) - 1;
 					pos[i * 4 + 3] = 1.0f;
 
 					vel[i * 4] = 0;
@@ -125,7 +124,6 @@ uint Particles::CreateVBO(uint size, ParticleArray index)
 	glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, 0, GL_DYNAMIC_DRAW_ARB);
 	glVertexAttribPointer(index, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(index);
-	glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 	return (uint)vbo;
 }
 
@@ -138,11 +136,11 @@ void Particles::InitColor()
 	float *ptr = data;
 	for (uint i = 0; i<numParticles; i++)
 	{
-		float t = i / (float)(numParticles);
-		*ptr++ = 1.f;
-		*ptr++ = 0;
-		*ptr++ = 0;
-		*ptr++ = 1.f;
+		//float t = i / (float)(numParticles);
+		*ptr++ = rand()/ (float)RAND_MAX;
+		*ptr++ = rand() / (float)RAND_MAX;
+		*ptr++ = rand() / (float)RAND_MAX;
+		*ptr++ = 0.5f;
 	}
 	glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
 }
@@ -172,7 +170,7 @@ void Particles::SetArray(ParticleArray array, const float *data, int start, int 
 
 void Particles::InitParams()
 {
-	mparams.radius = 1.0f/(8.f*2.0f);
+	mparams.radius = 1.0f/(16.f*2.0f);
 	mparams.gridSize = 2;
 	mparams.cellSize = mparams.radius * 2.0f;
 	mparams.cellNum = mparams.gridSize / mparams.cellSize;
@@ -180,11 +178,12 @@ void Particles::InitParams()
 	mparams.wholeNumCells = pow(mparams.cellNum,3);
 	mparams.worldPos = make_float3(0,0,0);
 	mparams.colliderRadius = 0.8f * mparams.radius;
-	mparams.gravity = make_float3(0, -9.8f, 0);
+	mparams.gravity = make_float3(0.0f, 0.0f, 0.0f);
 	mparams.timeStep = 0.5f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 1.f;
-	numParticles = 2000;
+	mparams.damping = 0.02f;
+	numParticles = 10000;
 }
 
 void Particles::Update()

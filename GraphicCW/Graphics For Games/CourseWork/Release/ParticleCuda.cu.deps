@@ -378,7 +378,7 @@ c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\host_defines.h
 c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\vector_functions.h
 c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\device_launch_parameters.h
 c:\program files\nvidia gpu computing toolkit\cuda\v7.0\include\vector_types.h
-d:\visual studio 2013\graphiccw\common\inc\gl\freeglut_std.h
+d:\visual studio 2013\cuda\graphiccw\common\inc\gl\freeglut_std.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\windows.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\winapifamily.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\sdkddkver.h
@@ -477,118 +477,14 @@ C:\Program Files (x86)\Windows Kits\8.1\Include\um\winreg.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\reason.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnetwk.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\wnnc.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\cderr.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\dde.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\ddeml.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\dlgs.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\lzexpand.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsystem.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mciapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmiscapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmiscapi2.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\playsoundapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmeapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\timeapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\joystickapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsyscom.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\nb30.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\rpc.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\rpcdce.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\rpcdcep.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\rpcnsi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\rpcnterr.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\rpcasync.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\shellapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\winperf.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack8.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\winsock.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\inaddr.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\wincrypt.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\bcrypt.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\ncrypt.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\dpapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\winefs.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\winscard.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\wtypes.h
-c:\program files (x86)\windows kits\8.1\include\shared\rpcndr.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack8.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\rpcnsip.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\rpcsal.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-c:\program files (x86)\windows kits\8.1\include\shared\wtypesbase.h
-c:\program files (x86)\windows kits\8.1\include\shared\guiddef.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\winioctl.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\winsmcrd.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\winspool.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\prsht.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack4.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\ole2.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack8.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\objbase.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack8.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\combaseapi.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack8.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\unknwnbase.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\objidlbase.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\guiddef.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\cguid.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\objidl.h
-c:\program files (x86)\windows kits\8.1\include\um\unknwn.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\urlmon.h
-c:\program files (x86)\windows kits\8.1\include\um\oleidl.h
-c:\program files (x86)\windows kits\8.1\include\um\servprov.h
-c:\program files (x86)\windows kits\8.1\include\um\msxml.h
-c:\program files (x86)\windows kits\8.1\include\um\oaidl.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\propidl.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\oleauto.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack8.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\commdlg.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\prsht.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\pshpack1.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\poppack.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\stralign.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\winsvc.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\mcx.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\imm.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\ime_cmodes.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\shared\windowsx.h
-C:\Program Files (x86)\Windows Kits\8.1\Include\um\mmsystem.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\GL/gl.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\GL/glu.h
-d:\visual studio 2013\graphiccw\common\inc\gl\freeglut_ext.h
+d:\visual studio 2013\cuda\graphiccw\common\inc\gl\freeglut_ext.h
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cstdio
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\crtdefs.h
@@ -1271,9 +1167,9 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/system/d
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/system/cpp/detail/partition.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/system/cuda/detail/partition.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\thrust/detail/trivial_sequence.h
-d:\visual studio 2013\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh
+d:\visual studio 2013\cuda\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh
 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\math.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\cuda_runtime.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\math_constants.h
-d:\visual studio 2013\graphiccw\graphics for games\coursework\Parameters.cuh
+d:\visual studio 2013\cuda\graphiccw\graphics for games\coursework\Parameters.cuh
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include\vector_types.h

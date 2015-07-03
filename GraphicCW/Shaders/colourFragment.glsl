@@ -7,12 +7,12 @@ vec4 colour ;
 
 out vec4 gl_FragColor;
 
-void main (void){
-gl_FragColor = IN.colour;
-if (point == 1)
-{
-	//vec2 center = gl_TexCoord[0];
-	//float cendist = 1.0 - length(center)*2.0;
-	//gl_FragColor = vec4(1, 0, 0, clamp(cendist, 0.0, 1.0));
-}
+void main(void){
+	gl_FragColor = IN.colour;
+	if (point == 1)
+	{
+		if (dot(gl_PointCoord - 0.5, gl_PointCoord - 0.5) > 0.25)
+			discard;
+		else   gl_FragColor = IN.colour;
+	}
 }

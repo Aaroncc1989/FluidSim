@@ -43,7 +43,7 @@ struct integrate_functor
 		float3 vel = make_float3(velData.x, velData.y, velData.z);
 
 		int size = params.gridSize/2;
-		//vel += params.gravity * deltaTime;
+		vel += params.gravity * deltaTime;
 		vel *= params.globalDamping;
 
 		// new position = old position + velocity * deltaTime
@@ -382,7 +382,7 @@ uint    numParticles)
 }
 
 __global__
-void calcForce(float4 *newVel,               // output: new velocity
+void calcForce(float4 *newVel, //output: new velocity
 float4 *oldPos,               // input: sorted positions
 float4 *oldVel,               // input: sorted velocities
 uint   *gridParticleIndex,    // input: sorted particle indices

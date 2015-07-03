@@ -1,1 +1,26 @@
-d:\visual studio 2013\graphiccw\graphics for games\release\nclgl.lib
+d:\cuda\graphiccw\nclgl\release\vc120.pdb
+d:\cuda\graphiccw\nclgl\release\shader.obj
+d:\cuda\graphiccw\nclgl\release\scenenode.obj
+d:\cuda\graphiccw\nclgl\release\quaternion.obj
+d:\cuda\graphiccw\nclgl\release\plane.obj
+d:\cuda\graphiccw\nclgl\release\particleemitter.obj
+d:\cuda\graphiccw\nclgl\release\objmesh.obj
+d:\cuda\graphiccw\nclgl\release\mouse.obj
+d:\cuda\graphiccw\nclgl\release\mesh.obj
+d:\cuda\graphiccw\nclgl\release\md5node.obj
+d:\cuda\graphiccw\nclgl\release\md5mesh.obj
+d:\cuda\graphiccw\nclgl\release\md5filedata.obj
+d:\cuda\graphiccw\nclgl\release\md5anim.obj
+d:\cuda\graphiccw\nclgl\release\matrix4.obj
+d:\cuda\graphiccw\nclgl\release\keyboard.obj
+d:\cuda\graphiccw\nclgl\release\heightmap.obj
+d:\cuda\graphiccw\nclgl\release\gametimer.obj
+d:\cuda\graphiccw\nclgl\release\frustum.obj
+d:\cuda\graphiccw\nclgl\release\cuberobot.obj
+d:\cuda\graphiccw\nclgl\release\camera.obj
+d:\cuda\graphiccw\nclgl\release\window.obj
+d:\cuda\graphiccw\nclgl\release\treemesh.obj
+d:\cuda\graphiccw\nclgl\release\textmesh.obj
+d:\cuda\graphiccw\nclgl\release\nclgl.tlog\cl.command.1.tlog
+d:\cuda\graphiccw\nclgl\release\nclgl.tlog\cl.read.1.tlog
+d:\cuda\graphiccw\nclgl\release\nclgl.tlog\cl.write.1.tlog

@@ -10,8 +10,8 @@ public:
 	enum ParticleArray
 	{
 		POSITION,
-		VELOCITY,
-		COLOR
+		COLOR,
+		VELOCITY
 	};
 
 	void Init();
@@ -24,12 +24,12 @@ public:
 	uint CreateVBO(uint size,ParticleArray index);
 	void InitColor();
 	void SetArray(ParticleArray array, const float *data, int start, int count);
-
+	SimParams mparams;
 
 protected:
 	//particle attribute
 	int numParticles;
-	SimParams mparams;
+	
 
 	float* pos;
 	float* color;
