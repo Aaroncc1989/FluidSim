@@ -8,7 +8,7 @@
 extern "C" void cudaGLInit(int argc, char **argv);
 
 int main(int argc, char **argv) {
-	Window w("Per Pixel Lighting!", 1280, 960, false);
+	Window w("FluidSimulation!", 1280, 960, false);
 	if (!w.HasInitialised()) {
 		return -1;
 	}

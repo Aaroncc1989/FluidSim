@@ -100,37 +100,36 @@ Mesh * Mesh :: GenerateTriangle () {
 	return m;
 }
 
-Mesh * Mesh :: GenerateQuad () {
-	Mesh * m = new Mesh ();
+Mesh * Mesh::GenerateQuad() {
+	Mesh * m = new Mesh();
 
-	m-> numVertices = 6;
-	m-> type = GL_TRIANGLES ;
+	m->numVertices = 4;
+	m->type = GL_TRIANGLE_STRIP;
 
-	m-> vertices = new Vector3 [m-> numVertices ];
-	m-> textureCoords = new Vector2 [m-> numVertices ];
-	m-> colours = new Vector4 [m-> numVertices ];
+	m->vertices = new Vector3[m->numVertices];
+	m->textureCoords = new Vector2[m->numVertices];
+	m->colours = new Vector4[m->numVertices];
+	m->normals = new Vector3[m->numVertices];
+	m->tangents = new Vector3[m->numVertices];
 
-	m->vertices[0] = Vector3(-1.0f, 1.0f, 0.0f);
-	m->vertices[1] = Vector3(1.0f, 1.0f, 0.0f);
+	m->vertices[0] = Vector3(-1.0f, -1.0f, 0.0f);
+	m->vertices[1] = Vector3(-1.0f, 1.0f, 0.0f);
 	m->vertices[2] = Vector3(1.0f, -1.0f, 0.0f);
-	m->vertices[3] = Vector3(-1.0f, 1.0f, 0.0f);
-	m->vertices[4] = Vector3(1.0f, -1.0f, 0.0f);
-	m->vertices[5] = Vector3(-1.0f, -1.0f, 0.0f);
+	m->vertices[3] = Vector3(1.0f, 1.0f, 0.0f);
 
-	m->textureCoords[0] = Vector2(-1.0f, -1.0f);
-	m->textureCoords[1] = Vector2(-1.0f, 1.0f);
-	m->textureCoords[2] = Vector2(1.0f, 1.0f);
-	m->textureCoords[3] = Vector2(1.0f, 0.0f);
-	m->textureCoords[4] = Vector2(1.0f, 1.0f);
-	m->textureCoords[5] = Vector2(1.0f, 0.0f);
+	m->textureCoords[0] = Vector2(0.0f, 0.0f);
+	m->textureCoords[1] = Vector2(0.0f, 1.0f);
+	m->textureCoords[2] = Vector2(1.0f, 0.0f);
+	m->textureCoords[3] = Vector2(1.0f, 1.0f);
 
-	for (int i = 0; i < 5; ++i) {
-		m-> colours [i] = Vector4 (1.0f, 1.0f ,1.0f ,1.0f);
+	for (int i = 0; i < 4; ++i) {
+		m->colours[i] = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		m->normals[i] = Vector3(0.0f, 0.0f, -1.0f);
+		m->tangents[i] = Vector3(1.0f, 0.0f, 0.0f);
 	}
 
-	m->GenerateNormals();
-	m->GenerateTangents();
-	m-> BufferData ();
+	m->BufferData();
+
 	return m;
 }
 

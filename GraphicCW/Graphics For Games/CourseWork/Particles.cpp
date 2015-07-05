@@ -20,6 +20,7 @@ Particles::Particles()
 }
 
 
+
 Particles::~Particles()
 {
 	assert(initFlag);
@@ -178,7 +179,7 @@ void Particles::InitParams()
 	mparams.worldPos = make_float3(0,0,0);
 	mparams.colliderRadius = 0.8f * mparams.radius;
 	mparams.gravity = make_float3(0.0f, 0.0f, 0.0f);
-	mparams.timeStep = 0.5f;
+	mparams.timeStep = 1.f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 1.f;
 	mparams.damping = 0.02f;

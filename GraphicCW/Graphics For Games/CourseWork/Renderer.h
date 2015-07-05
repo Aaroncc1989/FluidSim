@@ -11,10 +11,22 @@ public:
 
 	virtual void RenderScene();
 	virtual void UpdateScene(float msec);
+	void GenerateScreenTexture(GLuint &into, bool depth = false);
+	void GenerateBuffers();
+	void DrawScene();
+	void PresentScene();
 
 protected:
 	Particles* particle;
 	Camera * camera;
 	Light * light;
 	Mesh* quad;
+
+	Shader* sceneShader;
+	Shader* postShader;
+
+	GLuint bufferFBO; // FBO for our G- Buffer pass
+	GLuint bufferColourTex; // Albedo goes here
+	GLuint bufferNormalTex; // Normals go here
+	GLuint bufferDepthTex; // Depth goes here
 };
