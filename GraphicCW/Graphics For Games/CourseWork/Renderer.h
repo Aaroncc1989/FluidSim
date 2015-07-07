@@ -15,6 +15,7 @@ public:
 	void GenerateBuffers();
 	void DrawScene();
 	void PresentScene();
+	void Drawbg();
 
 protected:
 	Particles* particle;

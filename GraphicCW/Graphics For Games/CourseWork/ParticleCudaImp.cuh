@@ -2,13 +2,13 @@
 #define _PARTICLES_KERNEL_H_
 #pragma once
 #define CUTOFFDIST			1.f
-#define STIFFNESS			0.005f
+#define STIFFNESS			0.005f			//pressure coeffience
 #define RESTDENSITY			0
 #define SCALE               16.f
 #define GRAVITY             -0.0001f
 //#define GRAVITY             0
-#define RESTRHO				1.7f
-#define VISALPHA			0.005f
+#define RESTRHO				1.7f			//rest state density
+#define VISALPHA			0.02f			//visalocity
 
 #include <stdio.h>
 #include <math.h>
