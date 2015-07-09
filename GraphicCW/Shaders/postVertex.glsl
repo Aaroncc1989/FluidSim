@@ -14,6 +14,7 @@ in vec2 texCoord;
 out Vertex{
 	vec2 texCoord;
 	vec4 colour;
+	vec4 position;
 }OUT;
 
 void main(void) {
@@ -26,4 +27,5 @@ void main(void) {
 	}
 	OUT.texCoord = (textureMatrix * vec4(texCoord, 0.0, 1.0)).xy;
 	OUT.colour = colour;
+	OUT.position = gl_Position;
 }
