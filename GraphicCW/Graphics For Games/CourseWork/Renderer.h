@@ -24,7 +24,7 @@ protected:
 	Mesh* quad;
 
 	Shader* sceneShader;
-	Shader* postShader;
+	Shader* particleShader;
 
 	GLuint bufferFBO; // FBO for our G- Buffer pass
 	GLuint bufferColourTex; // Albedo goes here

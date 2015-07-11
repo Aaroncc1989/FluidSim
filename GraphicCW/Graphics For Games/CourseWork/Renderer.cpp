@@ -11,10 +11,10 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 
 	sceneShader = new Shader("../../Shaders/TexturedVertex.glsl",
 		"../../Shaders/TexturedFragment.glsl");
-	postShader = new Shader("../../Shaders/postVertex.glsl",
-		"../../Shaders/postFragment.glsl");
+	particleShader = new Shader("../../Shaders/particleVertex.glsl",
+		"../../Shaders/particleFragment.glsl");
 
-	if (!sceneShader->LinkProgram() || !postShader->LinkProgram()) {
+	if (!sceneShader->LinkProgram() || !particleShader->LinkProgram()) {
 		return;
 	}
 
@@ -51,7 +51,7 @@ void Renderer::RenderScene() {
 	projMatrix = Matrix4::Perspective(1.0f, 1000.f,
 		(float)width / (float)height, 45.0f);
 
-	Drawbg();
+	//Drawbg();
 	DrawScene();
 	PresentScene();
 	SwapBuffers();
@@ -61,7 +61,7 @@ void Renderer::Drawbg()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	SetCurrentShader(postShader);
+	SetCurrentShader(particleShader);
 	glUseProgram(currentShader->GetProgram());
 	modelMatrix = Matrix4::Translation(Vector3(0,-50,0)) * Matrix4::Scale(Vector3(500, 500, 500)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 0);
@@ -71,27 +71,20 @@ void Renderer::Drawbg()
 }
 
 
-
 void Renderer::DrawScene()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO);
-	//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	//glEnable(GL_POINT_SPRITE_ARB);
 	//glTexEnvi(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
-	SetCurrentShader(postShader);
+	SetCurrentShader(particleShader);
 	glUseProgram(currentShader->GetProgram());
 	modelMatrix = Matrix4::Translation(Vector3()) * Matrix4::Scale(Vector3(50, 50, 50)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
-	glUniform2f(glGetUniformLocation(currentShader->GetProgram(),
-		"pixelSize"), 1.0f / width, 1.0f / height);
+	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
 
-	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "depTex"), 2);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, bufferDepthTex);
-
-	//textureMatrix.ToIdentity();
 	UpdateShaderMatrices();
 
 	particle->DrawPoints();
@@ -122,6 +115,25 @@ void Renderer::PresentScene()
 }
 
 
+void Renderer::GenerateBuffers()
+{
+	glGenFramebuffers(1, &bufferFBO);
+	GenerateScreenTexture(bufferDepthTex, true);
+	GenerateScreenTexture(bufferColourTex);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+		GL_TEXTURE_2D, bufferColourTex, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+		GL_TEXTURE_2D, bufferDepthTex, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) !=
+		GL_FRAMEBUFFER_COMPLETE) {
+		return;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 void Renderer::GenerateScreenTexture(GLuint & into, bool depth)
 {
@@ -140,32 +152,4 @@ void Renderer::GenerateScreenTexture(GLuint & into, bool depth)
 		GL_UNSIGNED_BYTE, NULL);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void Renderer::GenerateBuffers()
-{
-	GLenum buffers[2];
-	buffers[0] = GL_COLOR_ATTACHMENT0;
-	buffers[1] = GL_COLOR_ATTACHMENT1;
-
-	glGenFramebuffers(1, &bufferFBO);
-
-	GenerateScreenTexture(bufferDepthTex, true);
-	GenerateScreenTexture(bufferColourTex);
-	GenerateScreenTexture(bufferNormalTex);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-		GL_TEXTURE_2D, bufferColourTex, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
-		GL_TEXTURE_2D, bufferNormalTex, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-		GL_TEXTURE_2D, bufferDepthTex, 0);
-	glDrawBuffers(2, buffers);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) !=
-		GL_FRAMEBUFFER_COMPLETE) {
-		return;
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
