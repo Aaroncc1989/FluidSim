@@ -13,7 +13,11 @@ public:
 	virtual void UpdateScene(float msec);
 	void GenerateScreenTexture(GLuint &into, bool depth = false);
 	void GenerateBuffers();
-	void DrawScene();
+
+	void DrawParticle();
+	void CurFlowSmoothing();
+	void DrawFluid();
+
 	void PresentScene();
 	void Drawbg();
 
@@ -22,12 +26,16 @@ protected:
 	Camera * camera;
 	Light * light;
 	Mesh* quad;
+	Matrix4 persProj;
+	Matrix4 orthoProj;
 
 	Shader* sceneShader;
 	Shader* particleShader;
+	Shader* curFlowShader;
+	Shader* fluidShader;
 
-	GLuint bufferFBO; // FBO for our G- Buffer pass
-	GLuint bufferColourTex; // Albedo goes here
+	GLuint bufferFBO[2]; // FBO for our G- Buffer pass
+	GLuint bufferColourTex[2]; // Albedo goes here
 	GLuint bufferNormalTex; // Normals go here
 	GLuint bufferDepthTex; // Depth goes here
 };
