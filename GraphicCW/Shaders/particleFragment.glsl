@@ -21,11 +21,11 @@ void main(void){
 
 	vec4 fragPos = vec4(IN.eyespacePos + normal * IN.eyespaceRadius * pixelSize.y, 1.0f);
 	vec4 clipspacePos = projMatrix * fragPos;
-	//float far = gl_DepthRange.far;
-	//float near = gl_DepthRange.near;
-	//float devDepth = clipspacePos.z / clipspacePos.w;
-	//float fragDepth = (((far - near) * devDepth) + near + far) / 2.0;
-	//gl_FragDepth = fragDepth;
+	float far = gl_DepthRange.far;
+	float near = gl_DepthRange.near;
+	float devDepth = clipspacePos.z / clipspacePos.w;
+	float fragDepth = (((far - near) * devDepth) + near + far) / 2.0;
+	gl_FragDepth = fragDepth;
 	particleDepth = clipspacePos.z;
 }
 

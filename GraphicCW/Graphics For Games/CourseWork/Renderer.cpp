@@ -18,6 +18,10 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	sceneShader = new Shader("../../Shaders/TexturedVertex.glsl",
 		"../../Shaders/TexturedFragment.glsl");
 
+
+	quadtxt = SOIL_load_OGL_texture("../../Textures/ground.jpg",
+		SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0);
+
 	if (!sceneShader->LinkProgram() 
 		|| !particleShader->LinkProgram() 
 		|| !curFlowShader->LinkProgram()
@@ -57,7 +61,7 @@ void Renderer::RenderScene() {
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
 	projMatrix = persProj;
-	//Drawbg();
+	Drawbg();
 	DrawParticle();
 	CurFlowSmoothing();
 	DrawFluid();
@@ -67,13 +71,13 @@ void Renderer::RenderScene() {
 
 void Renderer::Drawbg()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[0]);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	SetCurrentShader(particleShader);
+	SetCurrentShader(sceneShader);
 	glUseProgram(currentShader->GetProgram());
 	modelMatrix = Matrix4::Translation(Vector3(0,-50,0)) * Matrix4::Scale(Vector3(500, 500, 500)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
-	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 0);
 	UpdateShaderMatrices();
+	quad->SetTexture(quadtxt);
 	quad->Draw();
 	glUseProgram(0);
 }
@@ -123,7 +127,9 @@ void Renderer::CurFlowSmoothing()
 void Renderer::DrawFluid()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
 	SetCurrentShader(fluidShader);
 	glUseProgram(currentShader->GetProgram());
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -133,6 +139,7 @@ void Renderer::DrawFluid()
 	quad->SetTexture(bufferColourTex[0]);
 	quad->Draw();
 	glUseProgram(0);
+	glDisable(GL_BLEND);
 }
 
 

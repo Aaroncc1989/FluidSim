@@ -74,7 +74,7 @@ void main (void){
 		vec3 pos = eyespacePos(coords);
 		pos = (inverse(modelViewMatrix) * vec4(pos, 1.0f)).xyz;
 
-		float lambert = max(0.0f, dot(normalize(lightDir), normal));
+		float lambert = max(0.0f, dot(normal,normalize(lightDir)));
 
 		vec3 fromEye = normalize(pos);
 		fromEye.xz = -fromEye.xz;
@@ -85,8 +85,9 @@ void main (void){
 		//particleColor.w = clamp(1.0f - particleColor.w, 0.0f, 1.0f);
 		//particleColor.rgb = particleColor.rgb * (1.0f - specular);
 		particleColor.w = 1.0f;
-		particleColor.rgb = vec3(lambert + 0.2f);
+		particleColor.rgb = (lambert * 10.0f ) * particleColor.rgb * (1 - specular) + particleColor.rgb * 0.2f;
 
+		//gl_FragColor = particleColor;
 		gl_FragColor = particleColor;
 	}
 }

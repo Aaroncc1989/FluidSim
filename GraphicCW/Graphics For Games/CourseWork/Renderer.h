@@ -28,6 +28,7 @@ protected:
 	Mesh* quad;
 	Matrix4 persProj;
 	Matrix4 orthoProj;
+	unsigned int quadtxt;
 
 	Shader* sceneShader;
 	Shader* particleShader;
