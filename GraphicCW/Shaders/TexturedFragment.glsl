@@ -2,7 +2,6 @@
 
 uniform sampler2D diffuseTex ;
 uniform int useColor;
-uniform vec2 pixelSize;
 
 in Vertex{
 	vec2 texCoord;
@@ -17,6 +16,5 @@ void main (void){
 		gl_FragColor = IN.colour;
 		return;
 	}
-	float c = texture2D(diffuseTex, IN.texCoord);
-	gl_FragColor = vec4(c,0,0,1);
+	gl_FragColor = texture2D(diffuseTex, IN.texCoord);
 }

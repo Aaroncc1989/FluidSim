@@ -20,7 +20,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 
 
 	quadtxt = SOIL_load_OGL_texture("../../Textures/ground.jpg",
-		SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0);
+		SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 
 	if (!sceneShader->LinkProgram() 
 		|| !particleShader->LinkProgram() 
@@ -33,8 +33,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 		500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f)),
 		Vector4(1, 1, 1, 1), (RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 
-	persProj = Matrix4::Perspective(1.0f, 1000.f,(float)width / (float)height, 45.0f);
-	orthoProj = Matrix4::Orthographic(-1, 1, 1, -1, 1, -1);
+	projMatrix = Matrix4::Perspective(1.0f, 1000.f, (float)width / (float)height, 45.0f);
 
 	GenerateBuffers();
 	init = true;
@@ -60,12 +59,11 @@ void Renderer::UpdateScene(float msec) {
 void Renderer::RenderScene() {
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
-	projMatrix = persProj;
 	Drawbg();
 	DrawParticle();
-	CurFlowSmoothing();
+	//CurFlowSmoothing();
 	DrawFluid();
-	//PresentScene();
+
 	SwapBuffers();
 }
 
@@ -75,7 +73,7 @@ void Renderer::Drawbg()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	SetCurrentShader(sceneShader);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Translation(Vector3(0,-50,0)) * Matrix4::Scale(Vector3(500, 500, 500)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(0, -50, 0)) * Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	quad->SetTexture(quadtxt);
 	quad->Draw();
@@ -129,7 +127,7 @@ void Renderer::DrawFluid()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	SetCurrentShader(fluidShader);
 	glUseProgram(currentShader->GetProgram());
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -141,28 +139,6 @@ void Renderer::DrawFluid()
 	glUseProgram(0);
 	glDisable(GL_BLEND);
 }
-
-
-void Renderer::PresentScene()
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	SetCurrentShader(sceneShader);
-
-	glUseProgram(currentShader->GetProgram());
-	projMatrix = orthoProj;
-	modelMatrix.ToIdentity();
-	viewMatrix.ToIdentity();
-
-	glUniform2f(glGetUniformLocation(currentShader->GetProgram(),
-		"pixelSize"), 1.0f / width, 1.0f / height);
-
-	UpdateShaderMatrices();
-	quad->SetTexture(bufferColourTex[0]);
-	quad->Draw();
-	glUseProgram(0);
-}
-
 
 void Renderer::GenerateBuffers()
 {
