@@ -15,22 +15,22 @@ vec3 eyespaceNormal(vec2 pos) {
 
 	float zc = texture(diffuseTex, pos);
 
-	//float zdxp = texture(diffuseTex, pos + dx);
-	//float zdxn = texture(diffuseTex, pos - dx);
-	//float zdx = (zdxp == 0.0f) ? (zdxn == 0.0f ? 0.0f : (zc - zdxn)) : (zdxp - zc);
-
-	//float zdyp = texture(diffuseTex, pos + dy);
-	//float zdyn = texture(diffuseTex, pos - dy);
-	//float zdy = (zdyp == 0.0f) ? (zdyn == 0.0f ? 0.0f : (zc - zdyn)) : (zdyp - zc);
-
 	float zdxp = texture(diffuseTex, pos + dx);
 	float zdxn = texture(diffuseTex, pos - dx);
-	float zdx = 0.5f * (zdxp - zdxn);
-	//zdx = (zdxp == 0.0f || zdxn == 0.0f) ? 0.0f : zdx;
+	float zdx = (zdxp == 0.0f) ? (zdxn == 0.0f ? 0.0f : (zc - zdxn)) : (zdxp - zc);
 
 	float zdyp = texture(diffuseTex, pos + dy);
 	float zdyn = texture(diffuseTex, pos - dy);
-	float zdy = 0.5f * (zdyp - zdyn);
+	float zdy = (zdyp == 0.0f) ? (zdyn == 0.0f ? 0.0f : (zc - zdyn)) : (zdyp - zc);
+
+	//float zdxp = texture(diffuseTex, pos + dx);
+	//float zdxn = texture(diffuseTex, pos - dx);
+	//float zdx = 0.5f * (zdxp - zdxn);
+	//zdx = (zdxp == 0.0f || zdxn == 0.0f) ? 0.0f : zdx;
+
+	//float zdyp = texture(diffuseTex, pos + dy);
+	//float zdyn = texture(diffuseTex, pos - dy);
+	//float zdy = 0.5f * (zdyp - zdyn);
 	//zdy = (zdyp == 0.0f || zdyn == 0.0f) ? 0.0f : zdy;
 
 
@@ -46,8 +46,8 @@ vec3 eyespaceNormal(vec2 pos) {
 	vec3 pdx = normalize(vec3(cx * zc + wx * zdx, wy * zdx, zdx));
 	vec3 pdy = normalize(vec3(wx * zdy, cy * zc + wy * zdy, zdy));
 
-	if (zc - zdxp == 0 && zc - zdxn == 0){ return vec3(0); }
-
+	//if (zc - zdxp == 0 && zc - zdxn == 0){ return vec3(0); }
+	//else{ return vec3(1); }
 	return normalize(cross(pdx, pdy));
 }
 
@@ -99,6 +99,6 @@ void main (void){
 		particleColor.w = 1.0f;
 		particleColor.rgb = (lambert*100.0f ) * particleColor.rgb * (1 - specular) + particleColor.rgb * 0.2f;
 		//gl_FragColor = particleColor;
-		gl_FragColor = vec4(normal,1.0f);
+		gl_FragColor = vec4(abs(normal)/2.0f,1.0f);
 	}
 }

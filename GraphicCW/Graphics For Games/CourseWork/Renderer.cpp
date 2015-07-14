@@ -134,7 +134,7 @@ void Renderer::DrawFluid()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelViewMatrix"), 1, false, (float*)&(viewMatrix * modelMatrix));
 
-	quad->SetTexture(bufferColourTex[0]);
+	quad->SetTexture(bufferDepthTex);
 	quad->Draw();
 	glUseProgram(0);
 	glDisable(GL_BLEND);

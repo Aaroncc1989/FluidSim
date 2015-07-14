@@ -20,8 +20,9 @@ void main(void){
 	normal = normalize(normal);
 
 	normal = vec3(normal.x * IN.eyespaceRadius * pixelSize.x, normal.y * IN.eyespaceRadius * pixelSize.y, normal.z);
-	//vec4 fragPos = vec4(IN.eyespacePos + normal * IN.eyespaceRadius * pixelSize.y, 1.0f);
 	vec4 fragPos = vec4(IN.eyespacePos + normal, 1.0f);
+
+	//vec4 fragPos = vec4(IN.eyespacePos + normal * IN.eyespaceRadius * pixelSize.y, 1.0f);
 
 	vec4 clipspacePos = projMatrix * fragPos;
 	float far = gl_DepthRange.far;
