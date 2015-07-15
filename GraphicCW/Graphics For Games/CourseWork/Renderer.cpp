@@ -44,7 +44,7 @@ Renderer ::~Renderer(void) {
 	delete particle;
 	delete quad;
 
-	glDeleteTextures(2, bufferColourTex);
+	glDeleteTextures(2, particleDepthTex);
 	glDeleteTextures(1, &bufferDepthTex);
 	glDeleteFramebuffers(2, bufferFBO);
 	currentShader = 0;
@@ -73,7 +73,7 @@ void Renderer::Drawbg()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	SetCurrentShader(sceneShader);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Translation(Vector3(0, -50, 0)) * Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(0, -50, 0)) * Matrix4::Scale(Vector3(200, 200, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	quad->SetTexture(quadtxt);
 	quad->Draw();
@@ -113,9 +113,8 @@ void Renderer::CurFlowSmoothing()
 	int smoothingIterations = 60;
 	for (int i = 0; i < smoothingIterations; i++)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER,bufferFBO[1-pingpong]);
-		quad->SetTexture(bufferColourTex[pingpong]);
+		quad->SetTexture(particleDepthTex[pingpong]);
 		quad->Draw();
 		pingpong = 1 - pingpong;
 	}
@@ -134,7 +133,12 @@ void Renderer::DrawFluid()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelViewMatrix"), 1, false, (float*)&(viewMatrix * modelMatrix));
 
-	quad->SetTexture(bufferDepthTex);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, particleDepthTex[0]);
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "depthTex"), 2);
+
+	quad->SetTexture(bufferColourTex);
+	//quad->SetTexture(bufferDepthTex);
 	quad->Draw();
 	glUseProgram(0);
 	glDisable(GL_BLEND);
@@ -144,15 +148,28 @@ void Renderer::GenerateBuffers()
 {
 	glGenFramebuffers(2, bufferFBO);
 	GenerateScreenTexture(bufferDepthTex, true);
+	GenerateScreenTexture(bufferColourTex);
+
+
+	GLenum buffers[2];
+	buffers[0] = GL_COLOR_ATTACHMENT0;
+	buffers[1] = GL_COLOR_ATTACHMENT1;
 
 	for (int i = 0; i < 2; i++)
 	{
-		GenerateScreenTexture(bufferColourTex[i]);
+		GenerateScreenTexture(particleDepthTex[i]);
 		glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[i]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_2D, bufferColourTex[i], 0);
+			GL_TEXTURE_2D, particleDepthTex[i], 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
 			GL_TEXTURE_2D, bufferDepthTex, 0);
+		if (i == 0)
+		{
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+				GL_TEXTURE_2D, bufferColourTex, 0);
+			glDrawBuffers(2, buffers);
+		}
+
 	}
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) !=

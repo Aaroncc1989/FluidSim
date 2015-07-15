@@ -140,7 +140,7 @@ void Particles::InitColor()
 		*ptr++ = rand()/ (float)RAND_MAX;
 		*ptr++ = rand() / (float)RAND_MAX;
 		*ptr++ = rand() / (float)RAND_MAX;
-		*ptr++ = 0.5f;
+		*ptr++ = 1.0f;
 	}
 	glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
 }

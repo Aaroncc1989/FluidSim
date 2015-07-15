@@ -34,7 +34,7 @@ protected:
 	Shader* fluidShader;
 
 	GLuint bufferFBO[2]; // FBO for our G- Buffer pass
-	GLuint bufferColourTex[2]; // Albedo goes here
-	GLuint bufferNormalTex; // Normals go here
+	GLuint particleDepthTex[2]; // Albedo goes here
+	GLuint bufferColourTex; // Normals go here
 	GLuint bufferDepthTex; // Depth goes here
 };
