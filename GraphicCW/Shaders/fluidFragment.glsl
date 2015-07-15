@@ -43,10 +43,10 @@ float fresnel(float rr1, float rr2, vec3 n, vec3 d) {
 }
 
 void main (void){
-	float depth = texture(depthTex, coords).r;
 	vec4 color = texture(diffuseTex, coords);
+	float depth = texture(depthTex, coords);
 
-	if (depth == 0){ discard;}
+	if (depth == 1.0f){ discard;}
 
 	float linDepth = linearizeDepth(depth, 1.0f, 1000.0f);
 	vec3  posEye = uvToEye(coords, linDepth);
@@ -65,12 +65,13 @@ void main (void){
 
 	vec3 normal = normalize(cross(ddx, ddy));
 
-	vec3 lightDir = vec3(1.0f,1.0f,1.0f);
+	vec3 lightDir = vec3(1.0f,1.0f,-1.0f);
 	vec4 particleColor = exp(-vec4(0.6f, 0.2f, 0.05f, 3.0f));
 
 	float lambert = max(0.0f, dot(normal,normalize(lightDir)));
 	
 	//gl_FragColor = vec4( color.xyz, 1.0f);
-	gl_FragColor = vec4(vec3(depth), 1.0f);
-	//gl_FragColor = vec4(normal, 1.0f);
+	//gl_FragColor = vec4(lambert * particleColor.xyz , 1.0f);
+	gl_FragColor = vec4(normal, 1.0f);
+	//gl_FragColor = vec4(vec3(depth)-0.1f,1.0f);
 }

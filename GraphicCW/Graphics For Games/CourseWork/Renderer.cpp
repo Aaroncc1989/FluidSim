@@ -44,8 +44,8 @@ Renderer ::~Renderer(void) {
 	delete particle;
 	delete quad;
 
-	glDeleteTextures(2, particleDepthTex);
-	glDeleteTextures(1, &bufferDepthTex);
+	glDeleteTextures(1, &bufferColourTex);
+	glDeleteTextures(2, bufferDepthTex);
 	glDeleteFramebuffers(2, bufferFBO);
 	currentShader = 0;
 }
@@ -61,7 +61,7 @@ void Renderer::RenderScene() {
 	glEnable(GL_DEPTH_TEST);
 	Drawbg();
 	DrawParticle();
-	//CurFlowSmoothing();
+	CurFlowSmoothing();
 	DrawFluid();
 
 	SwapBuffers();
@@ -115,7 +115,7 @@ void Renderer::CurFlowSmoothing()
 	for (int i = 0; i < smoothingIterations; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER,bufferFBO[1-pingpong]);
-		quad->SetTexture(particleDepthTex[pingpong]);
+		quad->SetTexture(bufferDepthTex[pingpong]);
 		quad->Draw();
 		pingpong = 1 - pingpong;
 	}
@@ -135,11 +135,10 @@ void Renderer::DrawFluid()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelViewMatrix"), 1, false, (float*)&(viewMatrix * modelMatrix));
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, particleDepthTex[0]);
+	glBindTexture(GL_TEXTURE_2D, bufferDepthTex[0]);
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "depthTex"), 2);
 
 	quad->SetTexture(bufferColourTex);
-	//quad->SetTexture(bufferDepthTex);
 	quad->Draw();
 	glUseProgram(0);
 	glDisable(GL_BLEND);
@@ -148,29 +147,15 @@ void Renderer::DrawFluid()
 void Renderer::GenerateBuffers()
 {
 	glGenFramebuffers(2, bufferFBO);
-	GenerateScreenTexture(bufferDepthTex, true);
 	GenerateScreenTexture(bufferColourTex);
-
-
-	GLenum buffers[2];
-	buffers[0] = GL_COLOR_ATTACHMENT0;
-	buffers[1] = GL_COLOR_ATTACHMENT1;
-
 	for (int i = 0; i < 2; i++)
 	{
-		GenerateScreenTexture(particleDepthTex[i]);
+		GenerateScreenTexture(bufferDepthTex[i], true);
 		glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[i]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_2D, particleDepthTex[i], 0);
+			GL_TEXTURE_2D, bufferColourTex, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-			GL_TEXTURE_2D, bufferDepthTex, 0);
-		if (i == 0)
-		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
-				GL_TEXTURE_2D, bufferColourTex, 0);
-			glDrawBuffers(2, buffers);
-		}
-
+			GL_TEXTURE_2D, bufferDepthTex[i], 0);
 	}
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) !=

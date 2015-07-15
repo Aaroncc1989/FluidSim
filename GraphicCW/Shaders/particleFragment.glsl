@@ -8,7 +8,7 @@ in Vertex {
 	vec4  color;
 }IN;
 
-out vec4 gl_FragColor[2];
+out vec4 gl_FragColor;
 
 void main(void){
 	vec3 normal = vec3(0);
@@ -26,7 +26,5 @@ void main(void){
 	float deviceDepth = clipspacePos.z / clipspacePos.w;
 	float fragDepth = (((far - near) * deviceDepth) + near + far) / 2.0;
 	gl_FragDepth = fragDepth;
-
-	gl_FragColor[0] = vec4(0.9555, 0, 0, 1.0f);
-	gl_FragColor[1] = IN.color;
+	gl_FragColor = vec4(vec3(clipspacePos.z), 1.0f);
 }
