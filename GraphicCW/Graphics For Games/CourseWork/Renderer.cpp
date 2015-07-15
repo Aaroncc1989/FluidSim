@@ -70,6 +70,7 @@ void Renderer::RenderScene() {
 void Renderer::Drawbg()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	SetCurrentShader(sceneShader);
 	glUseProgram(currentShader->GetProgram());
@@ -89,7 +90,7 @@ void Renderer::DrawParticle()
 	//glEnable(GL_POINT_SPRITE_ARB);
 	//glTexEnvi(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
-	SetCurrentShader(particleShader);
+	SetCurrentShader(particleShader);	
 	glUseProgram(currentShader->GetProgram());
 	modelMatrix = Matrix4::Translation(Vector3()) * Matrix4::Scale(Vector3(50, 50, 50)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);

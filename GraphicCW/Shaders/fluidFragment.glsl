@@ -65,13 +65,12 @@ void main (void){
 
 	vec3 normal = normalize(cross(ddx, ddy));
 
-	vec3 lightDir = vec3(1.0f,1.0f,-1.0f);
+	vec3 lightDir = vec3(1.0f,1.0f,1.0f);
 	vec4 particleColor = exp(-vec4(0.6f, 0.2f, 0.05f, 3.0f));
 
 	float lambert = max(0.0f, dot(normal,normalize(lightDir)));
 	
-	//gl_FragColor = vec4(lambert * 100.0f * color.xyz, 1.0f);
-	//gl_FragColor = vec4(vec3(depth),1.0f);
-	gl_FragColor = vec4(normal/2.0f, 1.0f);
-	//gl_FragColor = color;
+	//gl_FragColor = vec4( color.xyz, 1.0f);
+	gl_FragColor = vec4(vec3(depth), 1.0f);
+	//gl_FragColor = vec4(normal, 1.0f);
 }
