@@ -17,13 +17,17 @@ vec3 curFlowSmoothing(vec2 pos)
 
 	float zdxp = texture(diffuseTex, pos + dx);
 	float zdxn = texture(diffuseTex, pos - dx);
+	if (zdxp == 0.0f) zdxp = zc;
+	if (zdxn == 0.0f) zdxn = zc;
 	float zdx = 0.5f * (zdxp - zdxn);
-	zdx = (zdxp == 1.0f || zdxn == 1.0f) ? 1.0f : zdx;
+	//zdx = (zdxp == 0.0f || zdxn == 0.0f) ? 0.0f : zdx;
 
 	float zdyp = texture(diffuseTex, pos + dy);
 	float zdyn = texture(diffuseTex, pos - dy);
+	if (zdyp == 0.0f) zdyp = zc;
+	if (zdyn == 0.0f) zdyn = zc;
 	float zdy = 0.5f * (zdyp - zdyn);
-	zdy = (zdyp == 1.0f || zdyn == 1.0f) ? 1.0f : zdy;
+	//zdy = (zdyp == 0.0f || zdyn == 0.0f) ? 0.0f : zdy;
 
 	float zdx2 = zdxp + zdxn - 2.0f * zc;
 	float zdy2 = zdyp + zdyn - 2.0f * zc;
@@ -32,6 +36,10 @@ vec3 curFlowSmoothing(vec2 pos)
 	float zdxnyn = texture(diffuseTex, pos - dx - dy);
 	float zdxpyn = texture(diffuseTex, pos + dx - dy);
 	float zdxnyp = texture(diffuseTex, pos - dx + dy);
+	if (zdxpyp == 0) zdxpyp = zc;
+	if (zdxnyn == 0) zdxnyn = zc;
+	if (zdxpyn == 0) zdxpyn = zc;
+	if (zdxnyp == 0) zdxnyp = zc;
 	float zdxy = (zdxpyp + zdxnyn - zdxpyn - zdxnyp) / 4.0f;
 
 	float cx = 2.0f * pixelSize.x / (-projMatrix[0][0]);
@@ -53,14 +61,14 @@ vec3 curFlowSmoothing(vec2 pos)
 void main (void){
 	float particleDepth = texture(diffuseTex, coords);
 
-	//if (particleDepth == 1.0f) {
-		//outDepth = 1.0f;
-	//}
-	//else {
+	if (particleDepth == 0.0f) {
+		outDepth = 0.0f;
+	}
+	else {
 		const float dt = 0.00055f;
 		const float dzt = 1000.0f;
 		vec3 dxyz = curFlowSmoothing(coords);
 
-		gl_FragDepth = particleDepth + dxyz.z * dt * (1.0f + (abs(dxyz.x) + abs(dxyz.y)) * dzt);
-	//}
+		outDepth = particleDepth + dxyz.z * dt * ((abs(dxyz.x) + abs(dxyz.y)) * dzt);
+	}
 }

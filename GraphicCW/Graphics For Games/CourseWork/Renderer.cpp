@@ -44,8 +44,8 @@ Renderer ::~Renderer(void) {
 	delete particle;
 	delete quad;
 
-	glDeleteTextures(1, &bufferColourTex);
-	glDeleteTextures(2, bufferDepthTex);
+	glDeleteTextures(2, bufferColourTex);
+	glDeleteTextures(1, &bufferDepthTex);
 	glDeleteFramebuffers(2, bufferFBO);
 	currentShader = 0;
 }
@@ -61,7 +61,7 @@ void Renderer::RenderScene() {
 	glEnable(GL_DEPTH_TEST);
 	Drawbg();
 	DrawParticle();
-	CurFlowSmoothing();
+	//CurFlowSmoothing();
 	DrawFluid();
 
 	SwapBuffers();
@@ -111,11 +111,11 @@ void Renderer::CurFlowSmoothing()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glDisable(GL_DEPTH_TEST);
 	int pingpong = 0;
-	int smoothingIterations = 60;
+	int smoothingIterations = 120;
 	for (int i = 0; i < smoothingIterations; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER,bufferFBO[1-pingpong]);
-		quad->SetTexture(bufferDepthTex[pingpong]);
+		quad->SetTexture(bufferColourTex[pingpong]);
 		quad->Draw();
 		pingpong = 1 - pingpong;
 	}
@@ -134,11 +134,11 @@ void Renderer::DrawFluid()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelViewMatrix"), 1, false, (float*)&(viewMatrix * modelMatrix));
 
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, bufferDepthTex[0]);
-	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "depthTex"), 2);
+	//glActiveTexture(GL_TEXTURE2);
+	//glBindTexture(GL_TEXTURE_2D, bufferColourTex[0]);
+	//glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "depthTex"), 2);
 
-	quad->SetTexture(bufferColourTex);
+	quad->SetTexture(bufferColourTex[0]);
 	quad->Draw();
 	glUseProgram(0);
 	glDisable(GL_BLEND);
@@ -147,15 +147,15 @@ void Renderer::DrawFluid()
 void Renderer::GenerateBuffers()
 {
 	glGenFramebuffers(2, bufferFBO);
-	GenerateScreenTexture(bufferColourTex);
+	GenerateScreenTexture(bufferDepthTex, true);
 	for (int i = 0; i < 2; i++)
 	{
-		GenerateScreenTexture(bufferDepthTex[i], true);
+		GenerateScreenTexture(bufferColourTex[i]);
 		glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[i]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_2D, bufferColourTex, 0);
+			GL_TEXTURE_2D, bufferColourTex[i], 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-			GL_TEXTURE_2D, bufferDepthTex[i], 0);
+			GL_TEXTURE_2D, bufferDepthTex, 0);
 	}
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) !=

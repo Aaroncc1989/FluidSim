@@ -8,7 +8,11 @@ in Vertex {
 	vec4  color;
 }IN;
 
-out vec4 gl_FragColor;
+out float lineDepth;
+
+float linearizeDepth(float exp_depth, float near, float far) {
+	return	(2.0f * near) / (far + near - exp_depth * (far - near));
+}
 
 void main(void){
 	vec3 normal = vec3(0);
@@ -26,5 +30,5 @@ void main(void){
 	float deviceDepth = clipspacePos.z / clipspacePos.w;
 	float fragDepth = (((far - near) * deviceDepth) + near + far) / 2.0;
 	gl_FragDepth = fragDepth;
-	gl_FragColor = vec4(vec3(clipspacePos.z), 1.0f);
+	lineDepth = linearizeDepth(fragDepth,1.0f,1000.0f);
 }
