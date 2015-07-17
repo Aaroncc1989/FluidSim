@@ -334,7 +334,6 @@ uint   *cellEnd)
 					float press = -0.5f * (p1 + p2) * grad / rho;
 					float3 visco = (vel2 - vel1) * lapl / rho * VISALPHA;
 					force = force + press * normal + visco;
-					//force = force + press * normal;
 				}
 			}
 		}

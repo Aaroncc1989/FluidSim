@@ -31,19 +31,15 @@ vec3 getEyePos(vec2 texCoord,vec2 offset){
 }
 
 vec3 eyespaceNormal(vec2 pos) {
-	// Width of one pixel
 	vec2 screenSize = vec2(0);
 	screenSize.x = 1.0f / pixelSize.x;
 	screenSize.y = 1.0f / pixelSize.y;
 
-	vec2 dx = vec2(1.0f / screenSize.x, 0.0f);
-	vec2 dy = vec2(0.0f, 1.0f / screenSize.y);
+	vec2 dx = vec2(pixelSize.x, 0.0f);
+	vec2 dy = vec2(0.0f, pixelSize.y);
 
-	// Central z
 	float zc = texture(diffuseTex, pos);
 
-	// Derivatives of z
-	// For shading, one-sided only-the-one-that-works version
 	float zdxp = texture(diffuseTex, pos + dx);
 	float zdxn = texture(diffuseTex, pos - dx);
 	float zdx = (zdxp == 0.0f) ? (zdxn == 0.0f ? 0.0f : (zc - zdxn)) : (zdxp - zc);
@@ -52,17 +48,14 @@ vec3 eyespaceNormal(vec2 pos) {
 	float zdyn = texture(diffuseTex, pos - dy);
 	float zdy = (zdyp == 0.0f) ? (zdyn == 0.0f ? 0.0f : (zc - zdyn)) : (zdyp - zc);
 
-	// Projection inversion
 	float cx = 2.0f / (screenSize.x * -projMatrix[0][0]);
 	float cy = 2.0f / (screenSize.y * -projMatrix[1][1]);
 
-	// Screenspace coordinates
 	float sx = floor(pos.x * (screenSize.x - 1.0f));
 	float sy = floor(pos.y * (screenSize.y - 1.0f));
 	float wx = (screenSize.x - 2.0f * sx) / (screenSize.x * projMatrix[0][0]);
 	float wy = (screenSize.y - 2.0f * sy) / (screenSize.y * projMatrix[1][1]);
 
-	// Eyespace position derivatives
 	vec3 pdx = normalize(vec3(cx * zc + wx * zdx, wy * zdx, zdx));
 	vec3 pdy = normalize(vec3(wx * zdy, cy * zc + wy * zdy, zdy));
 

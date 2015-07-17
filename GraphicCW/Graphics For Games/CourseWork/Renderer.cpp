@@ -53,6 +53,10 @@ Renderer ::~Renderer(void) {
 void Renderer::UpdateScene(float msec) {
 	camera->UpdateCamera(msec);
 	viewMatrix = camera->BuildViewMatrix();
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_R))
+	{
+		particle->InitParticle();
+	}
 	particle->Update();
 }
 

@@ -57,15 +57,10 @@ void Particles::InitParticle()
 
 				if (i < numParticles)
 				{
-					pos[i * 4] = (mparams.radius* 2.f * x )-1;
-					pos[i * 4 + 1] = (mparams.radius* 2.f * y )-1;
+					pos[i * 4] = (mparams.radius* 2.f * x) - 1;
+					pos[i * 4 + 1] = (mparams.radius* 2.f * y)-1;
 					pos[i * 4 + 2] = (mparams.radius* 2.f * z) - 1;
 					pos[i * 4 + 3] = 1.0f;
-
-					vel[i * 4] = 0;
-					vel[i * 4 + 1] = 0;
-					vel[i * 4 + 2] = 0;
-					vel[i * 4 + 3] = 0;
 				}
 			}
 		}
@@ -183,7 +178,7 @@ void Particles::InitParams()
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 0.998f;
 	mparams.damping = 0.02f;
-	numParticles = 10000;
+	numParticles = 20000;
 }
 
 void Particles::Update()
