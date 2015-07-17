@@ -61,7 +61,7 @@ void Renderer::RenderScene() {
 	glEnable(GL_DEPTH_TEST);
 	Drawbg();
 	DrawParticle();
-	//CurFlowSmoothing();
+	CurFlowSmoothing();
 	DrawFluid();
 
 	SwapBuffers();
@@ -111,7 +111,7 @@ void Renderer::CurFlowSmoothing()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glDisable(GL_DEPTH_TEST);
 	int pingpong = 0;
-	int smoothingIterations = 120;
+	int smoothingIterations = 60;
 	for (int i = 0; i < smoothingIterations; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER,bufferFBO[1-pingpong]);
@@ -133,10 +133,6 @@ void Renderer::DrawFluid()
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelViewMatrix"), 1, false, (float*)&(viewMatrix * modelMatrix));
-
-	//glActiveTexture(GL_TEXTURE2);
-	//glBindTexture(GL_TEXTURE_2D, bufferColourTex[0]);
-	//glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "depthTex"), 2);
 
 	quad->SetTexture(bufferColourTex[0]);
 	quad->Draw();
@@ -177,10 +173,10 @@ void Renderer::GenerateScreenTexture(GLuint & into, bool depth)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	glTexImage2D(GL_TEXTURE_2D, 0,
-		depth ? GL_DEPTH_COMPONENT24 : GL_RGBA8,
+		depth ? GL_DEPTH_COMPONENT24 : GL_R32F,
 		width, height, 0,
-		depth ? GL_DEPTH_COMPONENT : GL_RGBA,
-		GL_UNSIGNED_BYTE, NULL);
+		depth ? GL_DEPTH_COMPONENT : GL_RED,
+		depth ? GL_UNSIGNED_BYTE:GL_FLOAT, NULL);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

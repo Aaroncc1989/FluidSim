@@ -4,15 +4,11 @@ uniform mat4 projMatrix;
 
 in Vertex {
 	float eyespaceRadius;
-	vec3 eyespacePos;
+	vec3  eyespacePos;
 	vec4  color;
 }IN;
 
-out float lineDepth;
-
-float linearizeDepth(float exp_depth, float near, float far) {
-	return	(2.0f * near) / (far + near - exp_depth * (far - near));
-}
+out float depth;
 
 void main(void){
 	vec3 normal = vec3(0);
@@ -30,5 +26,5 @@ void main(void){
 	float deviceDepth = clipspacePos.z / clipspacePos.w;
 	float fragDepth = (((far - near) * deviceDepth) + near + far) / 2.0;
 	gl_FragDepth = fragDepth;
-	lineDepth = linearizeDepth(fragDepth,1.0f,1000.0f);
+	depth = clipspacePos.z;
 }
