@@ -169,11 +169,6 @@ extern "C"
 		// set all cells to empty
 		checkCudaErrors(cudaMemset(cellStart, 0xffffffff, numCells*sizeof(uint)));
 
-#if USE_TEX
-		checkCudaErrors(cudaBindTexture(0, oldPosTex, oldPos, numParticles*sizeof(float4)));
-		checkCudaErrors(cudaBindTexture(0, oldVelTex, oldVel, numParticles*sizeof(float4)));
-#endif
-
 		uint smemSize = sizeof(uint)*(numThreads + 1);
 		reorderDataAndFindCellStartD << < numBlocks, numThreads, smemSize >> >(
 			cellStart,
@@ -186,11 +181,6 @@ extern "C"
 			(float4 *)oldVel,
 			numParticles);
 		getLastCudaError("Kernel execution failed: reorderDataAndFindCellStartD");
-
-#if USE_TEX
-		checkCudaErrors(cudaUnbindTexture(oldPosTex));
-		checkCudaErrors(cudaUnbindTexture(oldVelTex));
-#endif
 	}
 
 	void simFluid(float *newVel,
@@ -202,20 +192,12 @@ extern "C"
 		uint   numParticles,
 		uint   numCells)
 	{
-#if USE_TEX
-		checkCudaErrors(cudaBindTexture(0, oldPosTex, sortedPos, numParticles*sizeof(float4)));
-		checkCudaErrors(cudaBindTexture(0, oldVelTex, sortedVel, numParticles*sizeof(float4)));
-		checkCudaErrors(cudaBindTexture(0, cellStartTex, cellStart, numCells*sizeof(uint)));
-		checkCudaErrors(cudaBindTexture(0, cellEndTex, cellEnd, numCells*sizeof(uint)));
-#endif
-
 		// thread per particle
 		uint numThreads, numBlocks;
 		computeGridSize(numParticles, 64, numBlocks, numThreads);
 
 		// execute the kernel
 		calcDensity << < numBlocks, numThreads >> >((float4 *)sortedPos,
-			(float4 *)sortedVel,
 			gridParticleIndex,
 			cellStart,
 			cellEnd,
@@ -235,13 +217,6 @@ extern "C"
 		// check if kernel invocation generated an error
 		getLastCudaError("Kernel execution failed");
 
-
-#if USE_TEX
-		checkCudaErrors(cudaUnbindTexture(oldPosTex));
-		checkCudaErrors(cudaUnbindTexture(oldVelTex));
-		checkCudaErrors(cudaUnbindTexture(cellStartTex));
-		checkCudaErrors(cudaUnbindTexture(cellEndTex));
-#endif
 	}
 
 

@@ -3,10 +3,7 @@
 #pragma once
 #define CUTOFFDIST			1.f
 #define STIFFNESS			0.005f			//pressure coeffience
-#define RESTDENSITY			0
 #define SCALE               16.f
-#define GRAVITY             -0.0001f
-//#define GRAVITY             0
 #define RESTRHO				1.7f			//rest state density
 #define VISALPHA			0.02f			//visalocity
 
@@ -16,11 +13,7 @@
 #include "math_constants.h"
 #include "Parameters.cuh"
 
-#if USE_TEX
-#define FETCH(t, i) tex1Dfetch(t##Tex, i)
-#else
 #define FETCH(t, i) t[i]
-#endif
 
 
 __constant__ SimParams params;
@@ -43,7 +36,7 @@ struct integrate_functor
 		float3 vel = make_float3(velData.x, velData.y, velData.z);
 
 		int size = params.gridSize;
-		vel += params.gravity * deltaTime;
+		//vel += params.gravity * deltaTime;
 		vel *= params.globalDamping;
 
 		// new position = old position + velocity * deltaTime
@@ -250,9 +243,7 @@ __device__
 float calcDensityD(int3    gridPos,
 uint    index,
 float4  pos,
-float4  vel,
 float4 *oldPos,
-float4 *oldVel,
 uint   *cellStart,
 uint   *cellEnd)
 {
@@ -271,7 +262,6 @@ uint   *cellEnd)
 
 			float3 pos1 = make_float3(pos);
 			float3 pos2 = make_float3(FETCH(oldPos, j));
-			float3 vel2 = make_float3(FETCH(oldVel, j));
 
 			float dist = length(pos1 - pos2) * SCALE;
 
@@ -327,8 +317,8 @@ uint   *cellEnd)
 					float grad = -dist * 945.f / (32.f*CUDART_PI_F*pow(h, 9)) * l*l;
 					float lapl = 945.f / (8.f * CUDART_PI_F*pow(h, 9)) * l * (dist*dist - 3.f / 4.f * l);
 
-					float p1 = STIFFNESS * (vel.w - RESTRHO);
-					float rho = FETCH(oldVel, j).w;
+					float p1 = STIFFNESS * (pos.w - RESTRHO);
+					float rho = FETCH(oldPos, j).w;
 					float p2 = STIFFNESS * (rho - RESTRHO);
 
 					float press = -0.5f * (p1 + p2) * grad / rho;
@@ -344,7 +334,6 @@ uint   *cellEnd)
 
 __global__
 void calcDensity(float4 *oldPos,               // input: sorted positions
-float4 *oldVel,               // input: sorted velocities
 uint   *gridParticleIndex,    // input: sorted particle indices
 uint   *cellStart,
 uint   *cellEnd,
@@ -356,7 +345,6 @@ uint    numParticles)
 
 	// read particle data from sorted arrays
 	float4 pos = FETCH(oldPos, index);
-	float4 vel = FETCH(oldVel, index);
 
 	// get address in grid
 	int3 gridPos = calcGridPos(make_float3(pos));
@@ -372,12 +360,12 @@ uint    numParticles)
 			for (int x = -1; x <= 1; x++)
 			{
 				int3 neighbourPos = gridPos + make_int3(x, y, z);
-				density += calcDensityD(neighbourPos, index, pos, vel, oldPos, oldVel, cellStart, cellEnd);
+				density += calcDensityD(neighbourPos, index, pos, oldPos, cellStart, cellEnd);
 			}
 		}
 	}
 
-	oldVel[index].w = density;
+	oldPos[index].w = density;
 }
 
 __global__
@@ -415,12 +403,11 @@ uint    numParticles)
 		}
 	}
 
-	float rho = vel.w;
+	float rho = pos.w;
 	float3 pos1 = make_float3(pos);
 	float3 vel1 = make_float3(vel);
 
-	force = make_float3(0, GRAVITY, 0) + force / rho;
-	//force = force / rho;
+	force = params.gravity + force / rho;
 	// collide with cursor sphere
 	//force += collideSpheres(pos1, params.colliderPos, vel1, make_float3(0.0f, 0.0f, 0.0f), params.radius, params.colliderRadius, 0.0f);
 

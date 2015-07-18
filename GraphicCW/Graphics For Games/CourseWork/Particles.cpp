@@ -61,6 +61,11 @@ void Particles::InitParticle()
 					pos[i * 4 + 1] = (mparams.radius* 2.f * y);
 					pos[i * 4 + 2] = (mparams.radius* 2.f * z);
 					pos[i * 4 + 3] = 1.0f;
+
+					vel[i * 4] = 0;
+					vel[i * 4 + 1] = 0;
+					vel[i * 4 + 2] = 0;
+					vel[i * 4 + 3] = 0;
 				}
 			}
 		}
@@ -166,19 +171,19 @@ void Particles::SetArray(ParticleArray array, const float *data, int start, int 
 void Particles::InitParams()
 {
 	mparams.radius = 1.0f/(16.f*2.0f);
-	mparams.gridSize = 4;
+	mparams.gridSize = 2;
 	mparams.cellSize = mparams.radius * 2.0f;
 	mparams.cellNum = mparams.gridSize / mparams.cellSize;
 	
 	mparams.wholeNumCells = pow(mparams.cellNum,3);
 	mparams.worldPos = make_float3(0,0,0);
 	mparams.colliderRadius = 0.8f * mparams.radius;
-	mparams.gravity = make_float3(0.0f, 0.0f, 0.0f);
+	mparams.gravity = make_float3(0.0f, -0.0001f, 0.0f);
 	mparams.timeStep = 2.f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 0.998f;
 	mparams.damping = 0.02f;
-	numParticles = 60000;
+	numParticles = 4000;
 }
 
 void Particles::Update()
