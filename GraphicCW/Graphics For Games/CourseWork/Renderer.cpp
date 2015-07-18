@@ -11,6 +11,8 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 
 	particleShader = new Shader("../../Shaders/particleVertex.glsl",
 		"../../Shaders/particleFragment.glsl");
+	thickness = new Shader("../../Shaders/thicknessVertex.glsl",
+		"../../Shaders/thicknessFragment.glsl");
 	curFlowShader = new Shader("../../Shaders/screenVertex.glsl",
 		"../../Shaders/curFlowFragment.glsl");
 	fluidShader = new Shader("../../Shaders/screenVertex.glsl",
@@ -22,7 +24,8 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	quadtxt = SOIL_load_OGL_texture("../../Textures/ground.jpg",
 		SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 
-	if (!sceneShader->LinkProgram() 
+	if (!sceneShader->LinkProgram()
+		|| !thickness->LinkProgram()
 		|| !particleShader->LinkProgram() 
 		|| !curFlowShader->LinkProgram()
 		|| !fluidShader->LinkProgram()) {
@@ -44,9 +47,15 @@ Renderer ::~Renderer(void) {
 	delete particle;
 	delete quad;
 
-	glDeleteTextures(2, bufferColourTex);
+	delete particleShader;
+	delete thickness;
+	delete curFlowShader;
+	delete fluidShader;
+	delete sceneShader;
+
+	glDeleteTextures(3, bufferColourTex);
 	glDeleteTextures(1, &bufferDepthTex);
-	glDeleteFramebuffers(2, bufferFBO);
+	glDeleteFramebuffers(3, bufferFBO);
 	currentShader = 0;
 }
 
@@ -65,6 +74,7 @@ void Renderer::RenderScene() {
 	glEnable(GL_DEPTH_TEST);
 	Drawbg();
 	DrawParticle();
+	RendThickness();
 	CurFlowSmoothing();
 	DrawFluid();
 
@@ -78,7 +88,7 @@ void Renderer::Drawbg()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	SetCurrentShader(sceneShader);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Translation(Vector3(0, -50, 0)) * Matrix4::Scale(Vector3(200, 200, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(0, -1, 0)) * Matrix4::Scale(Vector3(200, 200, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	quad->SetTexture(quadtxt);
 	quad->Draw();
@@ -91,12 +101,10 @@ void Renderer::DrawParticle()
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[0]);
 	glClearColor(0, 0, 0, 1.0f);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	//glEnable(GL_POINT_SPRITE_ARB);
-	//glTexEnvi(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
 	SetCurrentShader(particleShader);	
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Translation(Vector3()) * Matrix4::Scale(Vector3(50, 50, 50)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Scale(Vector3(50, 50, 50)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -104,7 +112,29 @@ void Renderer::DrawParticle()
 	UpdateShaderMatrices();
 	particle->DrawPoints();
 	glUseProgram(0);
-	//glDisable(GL_POINT_SPRITE_ARB);
+}
+
+void Renderer::RendThickness()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[2]);
+	glClearColor(0, 0, 0, 1.0f);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE,GL_ONE);
+	glDisable(GL_DEPTH_TEST);
+	SetCurrentShader(thickness);
+	glUseProgram(currentShader->GetProgram());
+	modelMatrix = Matrix4::Scale(Vector3(50, 50, 50)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
+	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
+	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
+
+	UpdateShaderMatrices();
+	particle->DrawPoints();
+	glUseProgram(0);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 }
 
 void Renderer::CurFlowSmoothing()
@@ -138,6 +168,10 @@ void Renderer::DrawFluid()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelViewMatrix"), 1, false, (float*)&(viewMatrix * modelMatrix));
 
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, bufferColourTex[2]);
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "thicknessTex"), 2);
+
 	quad->SetTexture(bufferColourTex[0]);
 	quad->Draw();
 	glUseProgram(0);
@@ -146,9 +180,9 @@ void Renderer::DrawFluid()
 
 void Renderer::GenerateBuffers()
 {
-	glGenFramebuffers(2, bufferFBO);
+	glGenFramebuffers(3, bufferFBO);
 	GenerateScreenTexture(bufferDepthTex, true);
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		GenerateScreenTexture(bufferColourTex[i]);
 		glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[i]);

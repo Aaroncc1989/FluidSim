@@ -1,6 +1,7 @@
 #version 150 core
 
 uniform sampler2D diffuseTex;
+uniform sampler2D thicknessTex;
 
 uniform vec2 pixelSize;
 uniform mat4 projMatrix;
@@ -79,15 +80,13 @@ float fresnel(float rr1, float rr2, vec3 n, vec3 d) {
 void main (void){
 	float depth = texture(diffuseTex, coords);
 	if (depth == 0.0f){ discard;}
-	//depth = linearizeDepth(depth,1,1000);
+	float thickness = texture(thicknessTex, coords);
 	//calculate normal
 	vec3 normal = eyespaceNormal(coords);
 
 	vec3 lightDir = vec3(1.0f,1.0f,1.0f);
-	vec4 particleColor = exp(-vec4(0.6f, 0.2f, 0.05f, 3.0f));
+	vec4 particleColor = exp(-vec4(0.6f, 0.2f, 0.05f, 3.0f) * thickness/10.0f);
 	float lambert = max(0.0f, dot(normal,normalize(lightDir)));
 	
 	gl_FragColor = vec4(lambert * particleColor.xyz, 1.0f);
-	//gl_FragColor = vec4(vec3(lambert), 1.0f);
-	//gl_FragColor = vec4(normal, 1.0f);
 }

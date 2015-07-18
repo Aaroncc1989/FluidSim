@@ -15,6 +15,7 @@ public:
 	void GenerateBuffers();
 
 	void DrawParticle();
+	void RendThickness();
 	void CurFlowSmoothing();
 	void DrawFluid();
 
@@ -32,8 +33,9 @@ protected:
 	Shader* particleShader;
 	Shader* curFlowShader;
 	Shader* fluidShader;
+	Shader* thickness;
 
-	GLuint bufferFBO[2]; // FBO for our G- Buffer pass
-	GLuint bufferColourTex[2]; // Albedo goes here
+	GLuint bufferFBO[3]; // FBO for our G- Buffer pass
+	GLuint bufferColourTex[3]; // Albedo goes here
 	GLuint bufferDepthTex; // Depth goes here
 };

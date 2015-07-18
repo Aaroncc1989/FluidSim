@@ -42,7 +42,7 @@ struct integrate_functor
 		float3 pos = make_float3(posData.x, posData.y, posData.z);
 		float3 vel = make_float3(velData.x, velData.y, velData.z);
 
-		int size = params.gridSize/2;
+		int size = params.gridSize;
 		vel += params.gravity * deltaTime;
 		vel *= params.globalDamping;
 
@@ -58,15 +58,15 @@ struct integrate_functor
 			vel.x *= params.boundaryDamping;
 		}
 
-		if (pos.x < -size + params.radius)
+		if (pos.x <  params.radius)
 		{
-			pos.x = -size + params.radius;
+			pos.x =  params.radius;
 			vel.x *= params.boundaryDamping;
 		}
 
-		if (pos.y > size - params.radius)
+		if (pos.y > size  - params.radius)
 		{
-			pos.y = size - params.radius;
+			pos.y = size  - params.radius;
 			vel.y *= params.boundaryDamping;
 		}
 
@@ -76,17 +76,17 @@ struct integrate_functor
 			vel.z *= params.boundaryDamping;
 		}
 
-		if (pos.z < -size + params.radius)
+		if (pos.z < params.radius)
 		{
-			pos.z = -size + params.radius;
+			pos.z = params.radius;
 			vel.z *= params.boundaryDamping;
 		}
 
 #endif
 
-		if (pos.y < -size + params.radius)
+		if (pos.y <  params.radius)
 		{
-			pos.y = -size + params.radius;
+			pos.y =  params.radius;
 			vel.y *= params.boundaryDamping;
 		}
 

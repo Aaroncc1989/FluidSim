@@ -49,17 +49,17 @@ void Particles::InitParticle()
 
 	for (int z = 0; z < numCells; z++)
 	{
-		for (int y = 0; y < numCells; y++)
+		for (int y = 0; y < numCells/2; y++)
 		{
 			for (int x = 0; x < numCells; x++)
 			{
-				int i = (z * numCells * numCells) + (y * numCells) + x;
+				int i = (z * numCells * numCells/2) + (y * numCells) + x;
 
 				if (i < numParticles)
 				{
-					pos[i * 4] = (mparams.radius* 2.f * x) - 1;
-					pos[i * 4 + 1] = (mparams.radius* 2.f * y)-1;
-					pos[i * 4 + 2] = (mparams.radius* 2.f * z) - 1;
+					pos[i * 4] = (mparams.radius* 2.f * x);
+					pos[i * 4 + 1] = (mparams.radius* 2.f * y);
+					pos[i * 4 + 2] = (mparams.radius* 2.f * z);
 					pos[i * 4 + 3] = 1.0f;
 				}
 			}
@@ -166,7 +166,7 @@ void Particles::SetArray(ParticleArray array, const float *data, int start, int 
 void Particles::InitParams()
 {
 	mparams.radius = 1.0f/(16.f*2.0f);
-	mparams.gridSize = 2;
+	mparams.gridSize = 4;
 	mparams.cellSize = mparams.radius * 2.0f;
 	mparams.cellNum = mparams.gridSize / mparams.cellSize;
 	
@@ -178,7 +178,7 @@ void Particles::InitParams()
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 0.998f;
 	mparams.damping = 0.02f;
-	numParticles = 20000;
+	numParticles = 60000;
 }
 
 void Particles::Update()
