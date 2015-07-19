@@ -84,7 +84,7 @@ struct integrate_functor
 		}
 
 		// store new position and velocity
-		thrust::get<0>(t) = make_float4(pos, posData.w);
+		thrust::get<0>(t) = make_float4(pos, velData.w);
 		thrust::get<1>(t) = make_float4(vel, velData.w);
 	}
 };
@@ -239,42 +239,7 @@ float attraction)
 }
 
 
-__device__
-float calcDensityD(int3    gridPos,
-uint    index,
-float4  pos,
-float4 *oldPos,
-uint   *cellStart,
-uint   *cellEnd)
-{
-	uint gridHash = calcGridHash(gridPos);
 
-	uint startIndex = FETCH(cellStart, gridHash);
-
-	float w = 0;
-
-	if (startIndex != 0xffffffff)
-	{
-		uint endIndex = FETCH(cellEnd, gridHash);
-
-		for (uint j = startIndex; j < endIndex; j++)
-		{
-
-			float3 pos1 = make_float3(pos);
-			float3 pos2 = make_float3(FETCH(oldPos, j));
-
-			float dist = length(pos1 - pos2) * SCALE;
-
-			float h = CUTOFFDIST;
-			if (dist >= 0 && dist <= h)
-			{
-				w += 315.f / (64.f * CUDART_PI_F * pow(h, 9)) * pow(h*h - dist*dist, 3);
-			}
-		}
-	}
-
-	return w;
-}
 
 __device__
 float3 calcForceD(int3    gridPos,
@@ -331,9 +296,46 @@ uint   *cellEnd)
 	return force;
 }
 
+__device__
+float calcDensityD(int3    gridPos,
+uint    index,
+float4  pos,
+float4 *oldPos,
+uint   *cellStart,
+uint   *cellEnd)
+{
+	uint gridHash = calcGridHash(gridPos);
+
+	uint startIndex = FETCH(cellStart, gridHash);
+
+	float w = 0;
+
+	if (startIndex != 0xffffffff)
+	{
+		uint endIndex = FETCH(cellEnd, gridHash);
+
+		for (uint j = startIndex; j < endIndex; j++)
+		{
+
+			float3 pos1 = make_float3(pos);
+			float3 pos2 = make_float3(FETCH(oldPos, j));
+
+			float dist = length(pos1 - pos2) * SCALE;
+
+			float h = CUTOFFDIST;
+			if (dist >= 0 && dist <= h)
+			{
+				w += 315.f / (64.f * CUDART_PI_F * pow(h, 9)) * pow(h*h - dist*dist, 3);
+			}
+		}
+	}
+
+	return w;
+}
 
 __global__
 void calcDensity(float4 *oldPos,               // input: sorted positions
+float4 *oldVel,
 uint   *gridParticleIndex,    // input: sorted particle indices
 uint   *cellStart,
 uint   *cellEnd,
@@ -345,7 +347,7 @@ uint    numParticles)
 
 	// read particle data from sorted arrays
 	float4 pos = FETCH(oldPos, index);
-
+	float4 vel = FETCH(oldVel, index);
 	// get address in grid
 	int3 gridPos = calcGridPos(make_float3(pos));
 
@@ -365,7 +367,7 @@ uint    numParticles)
 		}
 	}
 
-	oldPos[index].w = density;
+	oldVel[index].w = density;
 }
 
 __global__
@@ -413,7 +415,6 @@ uint    numParticles)
 
 	// write new velocity back to original unsorted location
 	uint originalIndex = gridParticleIndex[index];
-	newVel[originalIndex] = make_float4(vel1 + force, 0.0f);
+	newVel[originalIndex] = make_float4(vel1 + force, rho);
 }
-
 #endif

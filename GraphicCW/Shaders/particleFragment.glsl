@@ -15,7 +15,6 @@ void main(void){
 	normal.xy = (gl_PointCoord - 0.5f) * 2.0f;
 	float dist = dot(normal,normal);
 	if (dist >  1.0f){ discard; }
-
 	normal.y = -normal.y;
 	normal.z = sqrt(1.0f-dist);
 

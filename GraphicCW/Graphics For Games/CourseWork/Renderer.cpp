@@ -75,7 +75,7 @@ void Renderer::RenderScene() {
 	Drawbg();
 	DrawParticle();
 	RendThickness();
-	//CurFlowSmoothing();
+	CurFlowSmoothing();
 	DrawFluid();
 
 	SwapBuffers();

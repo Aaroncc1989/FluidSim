@@ -19,10 +19,10 @@ void main(void) {
 	vec4 posEye = viewMatrix * modelMatrix * vec4(position.xyz, 1.0);
 	
 	float dist = length(vec3(posEye));
-	gl_PointSize = pointRadius * 150000.0f / dist;
+	gl_PointSize = pointRadius * 120000.0f / dist;
+	if (position.w < 1.6f){ gl_PointSize /= 10.0f; }
 
 	OUT.eyespaceRadius = gl_PointSize;
-
 	gl_Position = projMatrix * posEye;
 	OUT.eyespacePos = posEye.xyz;
 	OUT.density = position.w;
