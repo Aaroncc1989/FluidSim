@@ -282,8 +282,8 @@ uint   *cellEnd)
 					float grad = -dist * 945.f / (32.f*CUDART_PI_F*pow(h, 9)) * l*l;
 					float lapl = 945.f / (8.f * CUDART_PI_F*pow(h, 9)) * l * (dist*dist - 3.f / 4.f * l);
 
-					float p1 = STIFFNESS * (pos.w - RESTRHO);
-					float rho = FETCH(oldPos, j).w;
+					float p1 = STIFFNESS * (vel.w - RESTRHO);
+					float rho = FETCH(oldVel, j).w;
 					float p2 = STIFFNESS * (rho - RESTRHO);
 
 					float press = -0.5f * (p1 + p2) * grad / rho;
@@ -299,7 +299,7 @@ uint   *cellEnd)
 __device__
 float calcDensityD(int3    gridPos,
 uint    index,
-float4  pos,
+float4  &pos,
 float4 *oldPos,
 uint   *cellStart,
 uint   *cellEnd)
@@ -309,7 +309,7 @@ uint   *cellEnd)
 	uint startIndex = FETCH(cellStart, gridHash);
 
 	float w = 0;
-
+	
 	if (startIndex != 0xffffffff)
 	{
 		uint endIndex = FETCH(cellEnd, gridHash);
@@ -325,7 +325,8 @@ uint   *cellEnd)
 			float h = CUTOFFDIST;
 			if (dist >= 0 && dist <= h)
 			{
-				w += 315.f / (64.f * CUDART_PI_F * pow(h, 9)) * pow(h*h - dist*dist, 3);
+				w += 315.f / (64.f * CUDART_PI_F * pow(h, 9)) * pow(h*h - dist*dist, 3);			//calculate density
+				pos.w ++;																		//count the num of neighbor
 			}
 		}
 	}
@@ -335,8 +336,8 @@ uint   *cellEnd)
 
 __global__
 void calcDensity(float4 *oldPos,               // input: sorted positions
-float4 *oldVel,
-uint   *gridParticleIndex,    // input: sorted particle indices
+float4 *oldVel,								   // input: sorted vel
+uint   *gridParticleIndex,					   // input: sorted particle indices
 uint   *cellStart,
 uint   *cellEnd,
 uint    numParticles)
@@ -348,6 +349,8 @@ uint    numParticles)
 	// read particle data from sorted arrays
 	float4 pos = FETCH(oldPos, index);
 	float4 vel = FETCH(oldVel, index);
+
+	pos.w = 0;
 	// get address in grid
 	int3 gridPos = calcGridPos(make_float3(pos));
 
@@ -366,7 +369,7 @@ uint    numParticles)
 			}
 		}
 	}
-
+	oldPos[index].w = pos.w;
 	oldVel[index].w = density;
 }
 
@@ -405,7 +408,8 @@ uint    numParticles)
 		}
 	}
 
-	float rho = pos.w;
+	float rho = vel.w;
+	float count = pos.w;
 	float3 pos1 = make_float3(pos);
 	float3 vel1 = make_float3(vel);
 
@@ -415,6 +419,6 @@ uint    numParticles)
 
 	// write new velocity back to original unsorted location
 	uint originalIndex = gridParticleIndex[index];
-	newVel[originalIndex] = make_float4(vel1 + force, rho);
+	newVel[originalIndex] = make_float4(vel1 + force, count);
 }
 #endif

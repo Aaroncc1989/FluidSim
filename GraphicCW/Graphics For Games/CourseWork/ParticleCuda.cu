@@ -198,6 +198,7 @@ extern "C"
 
 		// execute the kernel
 		calcDensity << < numBlocks, numThreads >> >((float4 *)sortedPos,
+			(float4 *)sortedVel,
 			gridParticleIndex,
 			cellStart,
 			cellEnd,
@@ -206,7 +207,7 @@ extern "C"
 		// check if kernel invocation generated an error
 		getLastCudaError("Kernel execution failed");
 
-		calcForce <<< numBlocks, numThreads >>>((float4 *)newVel,
+		calcForce << < numBlocks, numThreads >> >((float4 *)newVel,
 			(float4 *)sortedPos,
 			(float4 *)sortedVel,
 			gridParticleIndex,

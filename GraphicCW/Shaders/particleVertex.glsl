@@ -20,7 +20,7 @@ void main(void) {
 	
 	float dist = length(vec3(posEye));
 	gl_PointSize = pointRadius * 120000.0f / dist;
-	if (position.w < 1.6f){ gl_PointSize /= 10.0f; }
+	if (position.w <= 1.0f){ gl_PointSize /= 5.0f; }
 
 	OUT.eyespaceRadius = gl_PointSize;
 	gl_Position = projMatrix * posEye;
