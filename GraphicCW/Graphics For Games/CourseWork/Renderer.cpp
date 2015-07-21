@@ -72,6 +72,7 @@ void Renderer::UpdateScene(float msec) {
 void Renderer::RenderScene() {
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
+	glCullFace(GL_FRONT_AND_BACK);
 	Drawbg();
 	DrawParticle();
 	RendThickness();
@@ -104,7 +105,7 @@ void Renderer::DrawParticle()
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
 	SetCurrentShader(particleShader);	
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Scale(Vector3(50, 50, 50)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -125,7 +126,7 @@ void Renderer::RendThickness()
 	glDisable(GL_DEPTH_TEST);
 	SetCurrentShader(thickness);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Scale(Vector3(50, 50, 50)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -145,7 +146,7 @@ void Renderer::CurFlowSmoothing()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glDisable(GL_DEPTH_TEST);
 	int pingpong = 0;
-	int smoothingIterations = 60;
+	int smoothingIterations = 200;
 	for (int i = 0; i < smoothingIterations; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER,bufferFBO[1-pingpong]);

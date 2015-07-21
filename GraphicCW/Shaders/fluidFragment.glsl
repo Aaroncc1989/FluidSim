@@ -85,7 +85,7 @@ void main (void){
 	vec3 normal = eyespaceNormal(coords);
 
 	vec3 lightDir = vec3(1.0f,1.0f,1.0f);
-	vec4 particleColor = exp(-vec4(0.6f, 0.2f, 0.05f, 3.0f) * thickness/10.0f);
+	vec4 particleColor = exp(-vec4(0.6f, 0.2f, 0.05f, 3.0f) * thickness/5.0f);
 	float lambert = max(0.0f, dot(normal,normalize(lightDir)));
 	
 	gl_FragColor = vec4(lambert * particleColor.xyz, 1.0f);

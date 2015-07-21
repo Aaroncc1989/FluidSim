@@ -57,7 +57,7 @@ void Particles::InitParticle()
 
 				if (i < numParticles)
 				{
-					pos[i * 4] = (mparams.radius* 2.f * x);
+					pos[i * 4] = (mparams.radius* 2.f * x );
 					pos[i * 4 + 1] = (mparams.radius* 2.f * y);
 					pos[i * 4 + 2] = (mparams.radius* 2.f * z);
 					pos[i * 4 + 3] = 1.0f;
