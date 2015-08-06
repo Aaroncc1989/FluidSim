@@ -5,9 +5,11 @@ uniform sampler2D thicknessTex;
 
 uniform vec2 pixelSize;
 uniform mat4 projMatrix;
-uniform mat4 modelViewMatrix;
+uniform mat4 viewMatrix;
 
 in vec2 coords;
+in mat3 normalMatrix;
+in mat3 eyeNormalMatrix;
 out vec4 gl_FragColor;
 
 float linearizeDepth(float exp_depth, float near, float far) {
@@ -83,12 +85,14 @@ void main (void){
 	float thickness = texture(thicknessTex, coords);
 	//calculate normal
 	vec3 normal = eyespaceNormal(coords);
+	//normal = normalize(inverse(eyeNormalMatrix) * normal);
+	//normal = normalize(normalMatrix * normal);
 
 	vec3 lightDir = vec3(1.0f,1.0f,1.0f);
 	vec4 particleColor = exp(-vec4(0.6f, 0.2f, 0.05f, 3.0f) * thickness/5.0f);
 	float lambert = max(0.0f, dot(normal,normalize(lightDir)));
 	
 	gl_FragColor = vec4(lambert * particleColor.xyz, 1.0f);
-
+	gl_FragColor = vec4(normal, 1.0f);
 	//gl_FragColor = vec4(vec3(depth), 1.0f);
 }

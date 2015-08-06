@@ -17,15 +17,15 @@ vec3 curFlowSmoothing(vec2 pos)
 
 	float zdxp = texture(diffuseTex, pos + dx);
 	float zdxn = texture(diffuseTex, pos - dx);
-	if (zdxp == 0.0f) zdxp = zc;
-	if (zdxn == 0.0f) zdxn = zc;
+	if (zdxp == 0.0f ) zdxp = zc;
+	if (zdxn == 0.0f ) zdxn = zc;
 	float zdx = 0.5f * (zdxp - zdxn);
 	//zdx = (zdxp == 0.0f || zdxn == 0.0f) ? 0.0f : zdx;
 
 	float zdyp = texture(diffuseTex, pos + dy);
 	float zdyn = texture(diffuseTex, pos - dy);
-	if (zdyp == 0.0f) zdyp = zc;
-	if (zdyn == 0.0f) zdyn = zc;
+	if (zdyp == 0.0f ) zdyp = zc;
+	if (zdyn == 0.0f ) zdyn = zc;
 	float zdy = 0.5f * (zdyp - zdyn);
 	//zdy = (zdyp == 0.0f || zdyn == 0.0f) ? 0.0f : zdy;
 
@@ -36,10 +36,10 @@ vec3 curFlowSmoothing(vec2 pos)
 	float zdxnyn = texture(diffuseTex, pos - dx - dy);
 	float zdxpyn = texture(diffuseTex, pos + dx - dy);
 	float zdxnyp = texture(diffuseTex, pos - dx + dy);
-	if (zdxpyp == 0) zdxpyp = zc;
-	if (zdxnyn == 0) zdxnyn = zc;
-	if (zdxpyn == 0) zdxpyn = zc;
-	if (zdxnyp == 0) zdxnyp = zc;
+	if (zdxpyp == 0 ) zdxpyp = zc;
+	if (zdxnyn == 0 ) zdxnyn = zc;
+	if (zdxpyn == 0 ) zdxpyn = zc;
+	if (zdxnyp == 0 ) zdxnyp = zc;
 	float zdxy = (zdxpyp + zdxnyn - zdxpyn - zdxnyp) / 4.0f;
 
 	float cx = 2.0f * pixelSize.x / (-projMatrix[0][0]);

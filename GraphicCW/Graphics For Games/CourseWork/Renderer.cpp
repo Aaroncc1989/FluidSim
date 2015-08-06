@@ -13,9 +13,9 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 		"../../Shaders/particleFragment.glsl");
 	thickness = new Shader("../../Shaders/thicknessVertex.glsl",
 		"../../Shaders/thicknessFragment.glsl");
-	curFlowShader = new Shader("../../Shaders/screenVertex.glsl",
+	curFlowShader = new Shader("../../Shaders/curFlowVertex.glsl",
 		"../../Shaders/curFlowFragment.glsl");
-	fluidShader = new Shader("../../Shaders/screenVertex.glsl",
+	fluidShader = new Shader("../../Shaders/fluidVertex.glsl",
 		"../../Shaders/fluidFragment.glsl");
 	sceneShader = new Shader("../../Shaders/TexturedVertex.glsl",
 		"../../Shaders/TexturedFragment.glsl");
@@ -40,6 +40,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 
 	GenerateBuffers();
 	init = true;
+	smoothSwitch = false;
 }
 Renderer ::~Renderer(void) {
 	delete camera;
@@ -66,6 +67,11 @@ void Renderer::UpdateScene(float msec) {
 	{
 		particle->InitParticle();
 	}
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C))
+	{
+		smoothSwitch = !smoothSwitch;
+	}
+
 	particle->Update();
 }
 
@@ -147,6 +153,7 @@ void Renderer::CurFlowSmoothing()
 	glDisable(GL_DEPTH_TEST);
 	int pingpong = 0;
 	int smoothingIterations = 200;
+	if (!smoothSwitch){ smoothingIterations = 0; }
 	for (int i = 0; i < smoothingIterations; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER,bufferFBO[1-pingpong]);
@@ -167,7 +174,8 @@ void Renderer::DrawFluid()
 	glUseProgram(currentShader->GetProgram());
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
-	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelViewMatrix"), 1, false, (float*)&(viewMatrix * modelMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false, (float*)&viewMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*)&modelMatrix);
 
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, bufferColourTex[2]);

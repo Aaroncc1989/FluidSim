@@ -38,4 +38,6 @@ protected:
 	GLuint bufferFBO[3]; // FBO for our G- Buffer pass
 	GLuint bufferColourTex[3]; // Albedo goes here
 	GLuint bufferDepthTex; // Depth goes here
+
+	bool smoothSwitch;
 };

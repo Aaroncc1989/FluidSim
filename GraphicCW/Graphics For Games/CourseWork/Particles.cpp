@@ -58,7 +58,7 @@ void Particles::InitParticle()
 				if (i < numParticles)
 				{
 					pos[i * 4] = (mparams.radius* 2.f * x );
-					pos[i * 4 + 1] = (mparams.radius* 2.f * y);
+					pos[i * 4 + 1] = (mparams.radius* 2.f * y * 0.9f);
 					pos[i * 4 + 2] = (mparams.radius* 2.f * z);
 					pos[i * 4 + 3] = 1.0f;
 
@@ -179,11 +179,11 @@ void Particles::InitParams()
 	mparams.worldPos = make_float3(0,0,0);
 	mparams.colliderRadius = 0.9f * mparams.radius;
 	mparams.gravity = make_float3(0.0f, -0.0001f, 0.0f);
-	mparams.timeStep = 2.f;
+	mparams.timeStep = 2.0f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 0.998f;
 	mparams.damping = 0.02f;
-	numParticles = 50000;
+	numParticles = 10;
 }
 
 void Particles::Update()

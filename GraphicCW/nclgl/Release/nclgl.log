@@ -1,10 +1,10 @@
-﻿Build started 2015/7/13 22:33:20.
+﻿Build started 06/08/2015 20:52:04.
      1>Project "D:\GitHub\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Mesh.cpp
-         Mesh.cpp
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Camera.cpp
+         Camera.cpp
        Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Release\nclgl.lib" /NOLOGO /LTCG Release\Camera.obj
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Release\nclgl.lib" /NOLOGO /LTCG Release\Camera.obj
          Release\CubeRobot.obj
          Release\Frustum.obj
          Release\GameTimer.obj
@@ -32,4 +32,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.69
+Time Elapsed 00:00:01.61
