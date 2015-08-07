@@ -8,6 +8,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	particle = new Particles();
 	particle->Init();
 	quad = Mesh::GenerateQuad();
+	cube = new OBJMesh(MESHDIR"sphere.obj");
 
 	particleShader = new Shader("../../Shaders/particleVertex.glsl",
 		"../../Shaders/particleFragment.glsl");
@@ -36,7 +37,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 		500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f)),
 		Vector4(1, 1, 1, 1), (RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 
-	projMatrix = Matrix4::Perspective(1.0f, 1000.f, (float)width / (float)height, 45.0f);
+	projMatrix = Matrix4::Perspective(1.0f, 10000.f, (float)width / (float)height, 45.0f);
 
 	GenerateBuffers();
 	init = true;
@@ -47,6 +48,7 @@ Renderer ::~Renderer(void) {
 	delete light;
 	delete particle;
 	delete quad;
+	delete cube;
 
 	delete particleShader;
 	delete thickness;
@@ -72,13 +74,12 @@ void Renderer::UpdateScene(float msec) {
 		smoothSwitch = !smoothSwitch;
 	}
 
-	particle->Update();
+	//particle->Update();
 }
 
 void Renderer::RenderScene() {
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_FRONT_AND_BACK);
 	Drawbg();
 	DrawParticle();
 	RendThickness();
@@ -99,6 +100,9 @@ void Renderer::Drawbg()
 	UpdateShaderMatrices();
 	quad->SetTexture(quadtxt);
 	quad->Draw();
+	modelMatrix = Matrix4::Translation(Vector3(0, 100, 0)) * Matrix4::Scale(Vector3(10, 10, 10)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	UpdateShaderMatrices();
+	cube->Draw();
 	glUseProgram(0);
 }
 
@@ -107,11 +111,11 @@ void Renderer::DrawParticle()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[0]);
 	glClearColor(0, 0, 0, 1.0f);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
 	SetCurrentShader(particleShader);	
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Scale(Vector3(200, 200, 200)) * Matrix4::Translation(Vector3(0, 0, 0)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);

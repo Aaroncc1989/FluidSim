@@ -87,7 +87,7 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 #define OBJTEX		"vt"		//the current line of the obj file defines texture coordinates
 #define OBJNORM		"vn"		//the current line of the obj file defines a normal
 #define OBJFACE		"f"			//the current line of the obj file defines a face
-
+#define OBJ_USE_NORMALS 1
 /*
 OBJSubMesh structs are used to temporarily keep the data loaded 
 in from the OBJ files, before being parsed into a series of

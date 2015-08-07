@@ -59,10 +59,12 @@ vec3 eyespaceNormal(vec2 pos) {
 	float wx = (screenSize.x - 2.0f * sx) / (screenSize.x * projMatrix[0][0]);
 	float wy = (screenSize.y - 2.0f * sy) / (screenSize.y * projMatrix[1][1]);
 
-	vec3 pdx = normalize(vec3(cx * zc + wx * zdx, wy * zdx, zdx));
-	vec3 pdy = normalize(vec3(wx * zdy, cy * zc + wy * zdy, zdy));
+	vec3 pdx = (vec3(cx * zc + wx * zdx, wy * zdx, zdx));
+	vec3 pdy = (vec3(wx * zdy, cy * zc + wy * zdy, zdy));
 
-	return normalize(cross(pdx, pdy));
+	vec3 n = vec3(-cy*zdx, -cx*zdy, cx*cy*zc) * zc;
+	return n;
+	//return normalize(cross(pdx, pdy));
 }
 
 

@@ -8,10 +8,12 @@ uniform mat4 textureMatrix ;
 in vec3 position;
 in vec4 colour;
 in vec2 texCoord;
+in vec3 normal;
 
 out Vertex{
 	vec2 texCoord;
 	vec4 colour;
+	vec3 normal;
 } OUT;
 
 void main(void) {
@@ -19,4 +21,6 @@ void main(void) {
 	gl_Position = mvp * vec4(position, 1.0);
 	OUT.texCoord = (textureMatrix * vec4(texCoord, 0.0, 1.0)).xy;
 	OUT.colour = colour;
+	mat3 normalMatrix = transpose(inverse(mat3(viewMatrix * modelMatrix)));
+	OUT.normal = normalize(normalMatrix * normal);
 }
