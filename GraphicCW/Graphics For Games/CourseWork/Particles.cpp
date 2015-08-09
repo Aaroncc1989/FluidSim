@@ -183,7 +183,7 @@ void Particles::InitParams()
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 0.998f;
 	mparams.damping = 0.02f;
-	numParticles = 10;
+	numParticles = 50000;
 }
 
 void Particles::Update()

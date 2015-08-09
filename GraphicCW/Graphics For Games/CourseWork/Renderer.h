@@ -30,6 +30,7 @@ protected:
 	Mesh* quad;
 	Mesh* cube;
 	unsigned int quadtxt;
+	int tmp;
 
 	Shader* sceneShader;
 	Shader* particleShader;

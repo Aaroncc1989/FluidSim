@@ -27,7 +27,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 
 	if (!sceneShader->LinkProgram()
 		|| !thickness->LinkProgram()
-		|| !particleShader->LinkProgram() 
+		|| !particleShader->LinkProgram()
 		|| !curFlowShader->LinkProgram()
 		|| !fluidShader->LinkProgram()) {
 		return;
@@ -42,6 +42,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	GenerateBuffers();
 	init = true;
 	smoothSwitch = false;
+	tmp = 200;
 }
 Renderer ::~Renderer(void) {
 	delete camera;
@@ -73,8 +74,15 @@ void Renderer::UpdateScene(float msec) {
 	{
 		smoothSwitch = !smoothSwitch;
 	}
-
-	//particle->Update();
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_X))
+	{
+		tmp += 10;
+	}
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z))
+	{
+		tmp -= 10;
+	}
+	particle->Update();
 }
 
 void Renderer::RenderScene() {
@@ -102,7 +110,7 @@ void Renderer::Drawbg()
 	quad->Draw();
 	modelMatrix = Matrix4::Translation(Vector3(0, 100, 0)) * Matrix4::Scale(Vector3(10, 10, 10)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
-	cube->Draw();
+	//cube->Draw();
 	glUseProgram(0);
 }
 
@@ -113,9 +121,9 @@ void Renderer::DrawParticle()
 	glClearColor(0, 0, 0, 1.0f);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
-	SetCurrentShader(particleShader);	
+	SetCurrentShader(particleShader);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Scale(Vector3(200, 200, 200)) * Matrix4::Translation(Vector3(0, 0, 0)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -132,7 +140,7 @@ void Renderer::RendThickness()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE,GL_ONE);
+	glBlendFunc(GL_ONE, GL_ONE);
 	glDisable(GL_DEPTH_TEST);
 	SetCurrentShader(thickness);
 	glUseProgram(currentShader->GetProgram());
@@ -156,11 +164,11 @@ void Renderer::CurFlowSmoothing()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glDisable(GL_DEPTH_TEST);
 	int pingpong = 0;
-	int smoothingIterations = 200;
+	int smoothingIterations = tmp;
 	if (!smoothSwitch){ smoothingIterations = 0; }
 	for (int i = 0; i < smoothingIterations; i++)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER,bufferFBO[1-pingpong]);
+		glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[1 - pingpong]);
 		quad->SetTexture(bufferColourTex[pingpong]);
 		quad->Draw();
 		pingpong = 1 - pingpong;
@@ -227,7 +235,7 @@ void Renderer::GenerateScreenTexture(GLuint & into, bool depth)
 		depth ? GL_DEPTH_COMPONENT24 : GL_R32F,
 		width, height, 0,
 		depth ? GL_DEPTH_COMPONENT : GL_RED,
-		depth ? GL_UNSIGNED_BYTE:GL_FLOAT, NULL);
+		depth ? GL_UNSIGNED_BYTE : GL_FLOAT, NULL);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
