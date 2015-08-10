@@ -65,8 +65,8 @@ void main (void){
 		outDepth = 0.0f;
 	}
 	else {
-		const float dt = 0.00055f;
-		const float dzt = 1000.0f;
+		const float dt = 0.05f;
+		const float dzt = 10.0f;
 		vec3 dxyz = curFlowSmoothing(coords);
 
 		outDepth = particleDepth + dxyz.z * dt * (1.0f + (abs(dxyz.x) + abs(dxyz.y)) * dzt);

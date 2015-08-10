@@ -108,8 +108,8 @@ void Renderer::Drawbg()
 	UpdateShaderMatrices();
 	quad->SetTexture(quadtxt);
 	quad->Draw();
-	modelMatrix = Matrix4::Translation(Vector3(0, 100, 0)) * Matrix4::Scale(Vector3(10, 10, 10)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
-	UpdateShaderMatrices();
+	//modelMatrix = Matrix4::Translation(Vector3(0, 100, 0)) * Matrix4::Scale(Vector3(10, 10, 10)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	//UpdateShaderMatrices();
 	//cube->Draw();
 	glUseProgram(0);
 }

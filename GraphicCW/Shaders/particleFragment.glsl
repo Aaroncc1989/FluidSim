@@ -10,6 +10,10 @@ in Vertex{
 
 out float depth;
 
+float projectZ(float z, float near, float far) {
+	return far*(z + near) / (z*(far - near));
+}
+
 void main(void){
 	vec3 normal = vec3(0);
 	normal.xy = (gl_PointCoord - 0.5f) * 2.0f;
@@ -18,13 +22,7 @@ void main(void){
 	normal.y = -normal.y;
 	normal.z = sqrt(1.0f - dist);
 
-	vec4 fragPos = vec4(IN.eyespacePos + normal * IN.eyespaceRadius, 1.0f);
-	vec4 clipspacePos = projMatrix * fragPos;
-
-	//float far = gl_DepthRange.far;
-	//float near = gl_DepthRange.near;
-	//float deviceDepth = clipspacePos.z / clipspacePos.w;
-	//float fragDepth = (((far - near) * deviceDepth) + near + far) / 2.0;
-	//gl_FragDepth = fragDepth;
-	depth = clipspacePos.z + 1000;
+	float z = IN.eyespacePos.z + normal.z * IN.eyespaceRadius;
+	gl_FragDepth = projectZ(z, 1.0f, 10000.0f);
+	depth = z+1000.0f;
 }
