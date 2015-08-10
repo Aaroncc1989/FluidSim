@@ -17,6 +17,6 @@
 		 gl_FragColor *= texture(diffuseTex, IN.texCoord);
 	 }
 
-	 gl_FragColor = vec4(IN.normal,1.0f);
+	 //gl_FragColor = vec4(IN.normal,1.0f);
 
  }

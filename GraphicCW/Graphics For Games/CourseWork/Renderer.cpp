@@ -8,7 +8,6 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	particle = new Particles();
 	particle->Init();
 	quad = Mesh::GenerateQuad();
-	cube = new OBJMesh(MESHDIR"sphere.obj");
 
 	particleShader = new Shader("../../Shaders/particleVertex.glsl",
 		"../../Shaders/particleFragment.glsl");
@@ -49,7 +48,6 @@ Renderer ::~Renderer(void) {
 	delete light;
 	delete particle;
 	delete quad;
-	delete cube;
 
 	delete particleShader;
 	delete thickness;
@@ -76,11 +74,7 @@ void Renderer::UpdateScene(float msec) {
 	}
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_X))
 	{
-		tmp += 10;
-	}
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z))
-	{
-		tmp -= 10;
+
 	}
 	particle->Update();
 }
@@ -108,9 +102,6 @@ void Renderer::Drawbg()
 	UpdateShaderMatrices();
 	quad->SetTexture(quadtxt);
 	quad->Draw();
-	//modelMatrix = Matrix4::Translation(Vector3(0, 100, 0)) * Matrix4::Scale(Vector3(10, 10, 10)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
-	//UpdateShaderMatrices();
-	//cube->Draw();
 	glUseProgram(0);
 }
 
