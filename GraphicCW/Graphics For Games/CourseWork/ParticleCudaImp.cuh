@@ -239,63 +239,6 @@ float attraction)
 }
 
 
-
-
-__device__
-float3 calcForceD(int3    gridPos,
-uint    index,
-float4  pos,
-float4  vel,
-float4 *oldPos,
-float4 *oldVel,
-uint   *cellStart,
-uint   *cellEnd)
-{
-	uint gridHash = calcGridHash(gridPos);
-
-	uint startIndex = FETCH(cellStart, gridHash);
-
-	float3 force = make_float3(0.0f);
-
-	if (startIndex != 0xffffffff)
-	{
-		uint endIndex = FETCH(cellEnd, gridHash);
-
-		for (uint j = startIndex; j < endIndex; j++)
-		{
-			if (j != index)
-			{
-				float3 pos1 = make_float3(pos);
-				float3 vel1 = make_float3(vel);
-				float3 pos2 = make_float3(FETCH(oldPos, j));
-				float3 vel2 = make_float3(FETCH(oldVel, j));
-
-				float3 relPos = pos1 - pos2;
-				float dist = length(relPos);
-				float3 normal = relPos / dist;
-				dist = dist * SCALE;
-
-				float h = CUTOFFDIST;
-				if (dist >= 0 && dist <= h)
-				{
-					float l = h*h - dist*dist;
-					float grad = -dist * 945.f / (32.f*CUDART_PI_F*pow(h, 9)) * l*l;
-					float lapl = 945.f / (8.f * CUDART_PI_F*pow(h, 9)) * l * (dist*dist - 3.f / 4.f * l);
-
-					float p1 = STIFFNESS * (vel.w - RESTRHO);
-					float rho = FETCH(oldVel, j).w;
-					float p2 = STIFFNESS * (rho - RESTRHO);
-
-					float press = -0.5f * (p1 + p2) * grad / rho;
-					float3 visco = (vel2 - vel1) * lapl / rho * VISALPHA;
-					force = force + press * normal + visco;
-				}
-			}
-		}
-	}
-	return force;
-}
-
 __device__
 float calcDensityD(int3    gridPos,
 uint    index,
@@ -371,6 +314,63 @@ uint    numParticles)
 	}
 	oldPos[index].w = pos.w;
 	oldVel[index].w = density;
+}
+
+__device__
+float3 calcForceD(int3    gridPos,
+uint    index,
+float4  pos,
+float4  vel,
+float4 *oldPos,
+float4 *oldVel,
+uint   *cellStart,
+uint   *cellEnd)
+{
+	uint gridHash = calcGridHash(gridPos);
+
+	uint startIndex = FETCH(cellStart, gridHash);
+
+	float3 force = make_float3(0.0f);
+
+	if (startIndex != 0xffffffff)
+	{
+		uint endIndex = FETCH(cellEnd, gridHash);
+
+		for (uint j = startIndex; j < endIndex; j++)
+		{
+			if (j != index)
+			{
+				float3 pos1 = make_float3(pos);
+				float3 vel1 = make_float3(vel);
+				float3 pos2 = make_float3(FETCH(oldPos, j));
+				float3 vel2 = make_float3(FETCH(oldVel, j));
+
+				float3 relPos = pos1 - pos2;
+				float dist = length(relPos);
+				float3 normal = relPos / dist;
+				dist = dist * SCALE;
+
+				float h = CUTOFFDIST;
+				if (dist >= 0 && dist <= h)
+				{
+					float l = h*h - dist*dist;
+					float grad = -dist * 945.f / (32.f*CUDART_PI_F*pow(h, 9)) * l*l;						//gradient of kernel
+					float lapla = 945.f / (8.f * CUDART_PI_F*pow(h, 9)) * l * (dist*dist - 3.f / 4.f * l);	//laplacian of kernel
+
+					float p1 = STIFFNESS * (vel.w - RESTRHO);										// pressure at i 
+					float rho = FETCH(oldVel, j).w;													//density at j
+					float p2 = STIFFNESS * (rho - RESTRHO);											//pressure at j
+							
+					float press = -(p1 + p2) * grad / (rho*2.0f);									//force of pressure
+					float3 visco = (vel2 - vel1) * lapla / rho * VISALPHA;							//viscosity of pressure
+
+
+					force = force + press * normal + visco;											//final force
+				}
+			}
+		}
+	}
+	return force;
 }
 
 __global__
