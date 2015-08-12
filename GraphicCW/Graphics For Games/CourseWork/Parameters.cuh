@@ -18,10 +18,16 @@ struct SimParams
 	uint wholeNumCells;
 	float3 worldPos;
 
-	float spring;
 	float damping;
-	float shear;
-	float attraction;
 	float boundaryDamping;
+	float shear;
+	float spring;
+
+	float cutoffdist;
+	float stiffness;
+	float scale;
+	float restRHO;
+	float visalocityScale;
+	float tensionScale;
 };
 

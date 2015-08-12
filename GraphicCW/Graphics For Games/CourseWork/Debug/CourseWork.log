@@ -1,22 +1,14 @@
-﻿Build started 19/07/2015 12:26:20.
-     1>Project "D:\GitHub\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" on node 2 (Build target(s)).
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (CourseWork.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-     1>ClCompile:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I./ /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" /I../../common/inc /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Particles.cpp Renderer.cpp
-         Renderer.cpp
-         Particles.cpp
-     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\particles.cpp(138): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\particles.cpp(176): warning C4244: '=' : conversion from 'float' to 'uint', possible loss of data
-     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\particles.cpp(178): warning C4244: '=' : conversion from 'double' to 'uint', possible loss of data
-         Generating Code...
-       Link:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Debug\FluidSim.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" /LIBPATH:../../common/lib/Win32 cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Debug\FluidSim.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Debug\FluidSim.lib" /MACHINE:X86 Debug\ParticleCuda.cu.obj
-         Debug\Main.obj
-         Debug\Particles.obj
-         Debug\Renderer.obj
-         CourseWork.vcxproj -> D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Debug\FluidSim.exe
-     1>Done Building Project "D:\GitHub\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" (Build target(s)).
+﻿Build started 12/08/2015 15:34:17.
+     1>Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" on node 2 (Rebuild target(s)).
+     1>CudaClean:
+         cmd.exe /C "C:\Users\cmdadmin\AppData\Local\Temp\tmpea51a5599a534b99b7b5d9ac10bfccb2.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile   -g   -DWIN32 -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" -clean
+         
+         D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile   -g   -DWIN32 -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" -clean 
+         ParticleCuda.cu
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.Cpp.Platform.targets(44,5): error MSB8020: The builds tools for v120 (Platform Toolset = 'v120') cannot be found. To build using the v120 build tools, either click the Project menu or right-click the solution, and then select "Update VC++ Projects...". Install v120 to build using the v120 build tools.
+     1>Done Building Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" (Rebuild target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:01.32
+Time Elapsed 00:00:01.68

@@ -57,8 +57,8 @@ void Particles::InitParticle()
 
 				if (i < numParticles)
 				{
-					pos[i * 4] = (mparams.radius* 2.f * x );
-					pos[i * 4 + 1] = (mparams.radius* 2.f * y * 0.9f);
+					pos[i * 4] = (mparams.radius* 2.f * x);
+					pos[i * 4 + 1] = (mparams.radius* 2.f * y);
 					pos[i * 4 + 2] = (mparams.radius* 2.f * z);
 					pos[i * 4 + 3] = 1.0f;
 
@@ -181,9 +181,17 @@ void Particles::InitParams()
 	mparams.gravity = make_float3(0.0f, -0.0001f, 0.0f);
 	mparams.timeStep = 2.0f;
 	mparams.boundaryDamping = -0.5f;
-	mparams.globalDamping = 0.998f;
+	mparams.globalDamping = 1.0f;
 	mparams.damping = 0.02f;
 	numParticles = 50000;
+
+	//coeffecient
+	mparams.cutoffdist = 1.0f;
+	mparams.stiffness = 0.02f;
+	mparams.scale = 16.0f;
+	mparams.restRHO = 1.50f;
+	mparams.visalocityScale = 0.05f;
+	mparams.tensionScale = 0.001f;
 }
 
 void Particles::Update()

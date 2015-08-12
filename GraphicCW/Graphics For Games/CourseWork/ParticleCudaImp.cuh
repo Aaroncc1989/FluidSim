@@ -2,10 +2,11 @@
 #define _PARTICLES_KERNEL_H_
 #pragma once
 #define CUTOFFDIST			1.f
-#define STIFFNESS			0.005f			//pressure coeffience
+#define STIFFNESS			0.03f			//pressure coeffience
 #define SCALE               16.f
-#define RESTRHO				1.7f			//rest state density
-#define VISALPHA			0.02f			//visalocity
+#define RESTRHO				1.8f			//rest state density
+#define VISALPHA			0.05f			//visalocity
+#define TENSIONSCALE        0.001f			//scale of tension
 
 #include <stdio.h>
 #include <math.h>
@@ -263,9 +264,9 @@ uint   *cellEnd)
 			float3 pos1 = make_float3(pos);
 			float3 pos2 = make_float3(FETCH(oldPos, j));
 
-			float dist = length(pos1 - pos2) * SCALE;
+			float dist = length(pos1 - pos2) * params.scale;
 
-			float h = CUTOFFDIST;
+			float h = params.cutoffdist;
 			if (dist >= 0 && dist <= h)
 			{
 				w += 315.f / (64.f * CUDART_PI_F * pow(h, 9)) * pow(h*h - dist*dist, 3);			//calculate density
@@ -324,7 +325,10 @@ float4  vel,
 float4 *oldPos,
 float4 *oldVel,
 uint   *cellStart,
-uint   *cellEnd)
+uint   *cellEnd,
+float3 &surnormal,
+float &curvature
+)
 {
 	uint gridHash = calcGridHash(gridPos);
 
@@ -348,23 +352,24 @@ uint   *cellEnd)
 				float3 relPos = pos1 - pos2;
 				float dist = length(relPos);
 				float3 normal = relPos / dist;
-				dist = dist * SCALE;
+				dist = dist * params.scale;
 
-				float h = CUTOFFDIST;
+				float h = params.cutoffdist;
 				if (dist >= 0 && dist <= h)
 				{
 					float l = h*h - dist*dist;
 					float grad = -dist * 945.f / (32.f*CUDART_PI_F*pow(h, 9)) * l*l;						//gradient of kernel
 					float lapla = 945.f / (8.f * CUDART_PI_F*pow(h, 9)) * l * (dist*dist - 3.f / 4.f * l);	//laplacian of kernel
 
-					float p1 = STIFFNESS * (vel.w - RESTRHO);										// pressure at i 
+					float p1 = params.stiffness * (vel.w - params.restRHO);							// pressure at i 
 					float rho = FETCH(oldVel, j).w;													//density at j
-					float p2 = STIFFNESS * (rho - RESTRHO);											//pressure at j
+					float p2 = params.stiffness * (rho - params.restRHO);							//pressure at j
 							
 					float press = -(p1 + p2) * grad / (rho*2.0f);									//force of pressure
-					float3 visco = (vel2 - vel1) * lapla / rho * VISALPHA;							//viscosity of pressure
-
-
+					float3 visco = (vel2 - vel1) * lapla / rho * params.visalocityScale;			//viscosity of pressure
+					
+					surnormal = surnormal + (grad / rho) * normal;
+					curvature = curvature + (lapla / rho);
 					force = force + press * normal + visco;											//final force
 				}
 			}
@@ -396,6 +401,10 @@ uint    numParticles)
 	// examine neighbouring cells
 	float3 force = make_float3(0.0f);
 
+	float3 tension = make_float3(0.0f);
+	float3 surNormal = make_float3(0.0f);
+	float curvature = 0.0f;
+
 	for (int z = -1; z <= 1; z++)
 	{
 		for (int y = -1; y <= 1; y++)
@@ -403,7 +412,7 @@ uint    numParticles)
 			for (int x = -1; x <= 1; x++)
 			{
 				int3 neighbourPos = gridPos + make_int3(x, y, z);
-				force += calcForceD(neighbourPos, index, pos, vel, oldPos, oldVel, cellStart, cellEnd);
+				force += calcForceD(neighbourPos, index, pos, vel, oldPos, oldVel, cellStart, cellEnd,surNormal,curvature);
 			}
 		}
 	}
@@ -412,8 +421,11 @@ uint    numParticles)
 	float count = pos.w;
 	float3 pos1 = make_float3(pos);
 	float3 vel1 = make_float3(vel);
-
-	force = params.gravity + force / rho;
+	if (dot(surNormal, surNormal) > 3.0f)
+	{
+		tension = -params.tensionScale * curvature * normalize(surNormal);
+	}
+	force = params.gravity + force / rho + tension;
 	// collide with cursor sphere
 	//force += collideSpheres(pos1, params.colliderPos, vel1, make_float3(0.0f, 0.0f, 0.0f), params.radius, params.colliderRadius, 0.0f);
 

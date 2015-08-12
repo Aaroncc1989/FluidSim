@@ -1,7 +1,7 @@
-﻿Build started 11/08/2015 20:21:28.
+﻿Build started 12/08/2015 16:08:45.
      1>Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" on node 2 (Rebuild target(s)).
      1>CudaClean:
-         cmd.exe /C "C:\Users\B2025828\AppData\Local\Temp\tmp565a017c556b49b38e37e30c3e40b3c7.cmd"
+         cmd.exe /C "C:\Users\cmdadmin\AppData\Local\Temp\tmp41e1775d0a6e49168ef1f98c18d3eadf.cmd"
          "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile      -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" -clean
          
          D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile      -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" -clean 
@@ -10,12 +10,12 @@
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /DWIN32 /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE /I./ /I../../common/inc /I./ /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" /I../../common/inc /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I. /FIcuda_runtime.h /c "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" 
        CudaBuild:
          Compiling CUDA source file ParticleCuda.cu...
-         cmd.exe /C "C:\Users\B2025828\AppData\Local\Temp\tmpd4c26ea097f94b40b4679e5b91015c59.cmd"
+         cmd.exe /C "C:\Users\cmdadmin\AppData\Local\Temp\tmp5278324ed89d4e2da73e358cadecff24.cmd"
          "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2013 -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile -cudart static     -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu"
          
          D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2013 -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile -cudart static     -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" 
-     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(294): warning : variable "vel" was declared but never referenced
-     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(294): warning : variable "vel" was declared but never referenced
+     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(295): warning : variable "vel" was declared but never referenced
+     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(295): warning : variable "vel" was declared but never referenced
          ParticleCuda.cu
        ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I./ /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" /I../../common/inc /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp Particles.cpp Renderer.cpp
@@ -41,4 +41,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:17.94
+Time Elapsed 00:00:17.43
