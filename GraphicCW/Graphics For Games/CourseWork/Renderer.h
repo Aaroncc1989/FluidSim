@@ -4,6 +4,13 @@
 #include "../../nclgl/Camera.h"
 #include "../../nclgl/HeightMap.h"
 
+enum FBOINDEX
+{
+	PARTICLE,
+	CURVATURE,
+	THICKNESS
+};
+
 class Renderer : public OGLRenderer {
 public:
 	Renderer(Window & parent);
@@ -17,6 +24,7 @@ public:
 	void DrawParticle();
 	void RendThickness();
 	void CurFlowSmoothing();
+	void BilateralFilter();
 	void DrawFluid();
 
 	void PresentScene();
@@ -35,9 +43,10 @@ protected:
 	Shader* curFlowShader;
 	Shader* fluidShader;
 	Shader* thickness;
+	Shader* bilateralFilter;
 
-	GLuint bufferFBO[3]; // FBO for our G- Buffer pass
-	GLuint bufferColourTex[3]; // Albedo goes here
+	GLuint bufferFBO[4]; // FBO for our G-Buffer pass
+	GLuint bufferColourTex[4]; // Albedo goes here
 	GLuint bufferDepthTex; // Depth goes here
 
 	bool smoothSwitch;

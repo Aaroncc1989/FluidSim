@@ -19,7 +19,8 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 		"../../Shaders/fluidFragment.glsl");
 	sceneShader = new Shader("../../Shaders/TexturedVertex.glsl",
 		"../../Shaders/TexturedFragment.glsl");
-
+	bilateralFilter = new Shader("../../Shaders/bilateralFilterVertex.glsl", 
+		"../../Shaders/bilateralFilterFragment.glsl");
 
 	quadtxt = SOIL_load_OGL_texture("../../Textures/ground.jpg",
 		SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
@@ -28,7 +29,8 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 		|| !thickness->LinkProgram()
 		|| !particleShader->LinkProgram()
 		|| !curFlowShader->LinkProgram()
-		|| !fluidShader->LinkProgram()) {
+		|| !fluidShader->LinkProgram()
+		|| !bilateralFilter->LinkProgram()) {
 		return;
 	}
 
@@ -72,21 +74,21 @@ void Renderer::UpdateScene(float msec) {
 	{
 		smoothSwitch = !smoothSwitch;
 	}
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_X))
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 	{
-
+		particle->AddSphere();
 	}
 	particle->Update();
 }
 
 void Renderer::RenderScene() {
 	glDepthMask(GL_TRUE);
-	glEnable(GL_DEPTH_TEST);
 	Drawbg();
 	DrawParticle();
 	RendThickness();
-	CurFlowSmoothing();
-	DrawFluid();
+	//CurFlowSmoothing();
+	BilateralFilter();
+	//DrawFluid();
 
 	SwapBuffers();
 }
@@ -108,9 +110,10 @@ void Renderer::Drawbg()
 
 void Renderer::DrawParticle()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[0]);
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[PARTICLE]);
 	glClearColor(0, 0, 0, 1.0f);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
 	SetCurrentShader(particleShader);
 	glUseProgram(currentShader->GetProgram());
@@ -126,7 +129,7 @@ void Renderer::DrawParticle()
 
 void Renderer::RendThickness()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[2]);
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[THICKNESS]);
 	glClearColor(0, 0, 0, 1.0f);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
@@ -143,20 +146,19 @@ void Renderer::RendThickness()
 	UpdateShaderMatrices();
 	particle->DrawPoints();
 	glUseProgram(0);
-	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 }
 
 void Renderer::CurFlowSmoothing()
 {
+	if (!smoothSwitch) return;
 	SetCurrentShader(curFlowShader);
 	glUseProgram(currentShader->GetProgram());
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glDisable(GL_DEPTH_TEST);
 	int pingpong = 0;
-	int smoothingIterations = tmp;
-	if (!smoothSwitch){ smoothingIterations = 0; }
+	int smoothingIterations = tmp;	
 	for (int i = 0; i < smoothingIterations; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[1 - pingpong]);
@@ -164,7 +166,19 @@ void Renderer::CurFlowSmoothing()
 		quad->Draw();
 		pingpong = 1 - pingpong;
 	}
-	glEnable(GL_DEPTH_TEST);
+	glUseProgram(0);
+}
+
+void Renderer::BilateralFilter()
+{
+	if (!smoothSwitch) return;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	SetCurrentShader(bilateralFilter);
+	glUseProgram(currentShader->GetProgram());
+	quad->SetTexture(bufferColourTex[0]);
+	quad->Draw();
+	glUseProgram(0);
 }
 
 void Renderer::DrawFluid()
@@ -181,10 +195,10 @@ void Renderer::DrawFluid()
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*)&modelMatrix);
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, bufferColourTex[2]);
+	glBindTexture(GL_TEXTURE_2D, bufferColourTex[THICKNESS]);
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "thicknessTex"), 2);
 
-	quad->SetTexture(bufferColourTex[0]);
+	quad->SetTexture(bufferColourTex[PARTICLE]);
 	quad->Draw();
 	glUseProgram(0);
 	glDisable(GL_BLEND);

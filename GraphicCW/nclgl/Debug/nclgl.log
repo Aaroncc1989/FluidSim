@@ -1,35 +1,8 @@
-﻿Build started 05/07/2015 17:16:18.
-     1>Project "D:\GitHub\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _DEBUG /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Mesh.cpp
-         Mesh.cpp
-       Lib:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Debug\nclgl.lib" /NOLOGO Debug\Camera.obj
-         Debug\CubeRobot.obj
-         Debug\Frustum.obj
-         Debug\GameTimer.obj
-         Debug\HeightMap.obj
-         Debug\Keyboard.obj
-         Debug\Matrix4.obj
-         Debug\MD5Anim.obj
-         Debug\MD5FileData.obj
-         Debug\MD5Mesh.obj
-         Debug\MD5Node.obj
-         Debug\Mesh.obj
-         Debug\Mouse.obj
-         Debug\OBJMesh.obj
-         Debug\OGLRenderer.obj
-         Debug\ParticleEmitter.obj
-         Debug\Plane.obj
-         Debug\Quaternion.obj
-         Debug\SceneNode.obj
-         Debug\Shader.obj
-         Debug\TextMesh.obj
-         Debug\TreeMesh.obj
-         Debug\Window.obj
-         nclgl.vcxproj -> D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Debug\nclgl.lib
-     1>Done Building Project "D:\GitHub\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" (Build target(s)).
+﻿Build started 13/08/2015 12:54:03.
+     1>Project "D:\Github\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.Cpp.Platform.targets(44,5): error MSB8020: The builds tools for v120 (Platform Toolset = 'v120') cannot be found. To build using the v120 build tools, either click the Project menu or right-click the solution, and then select "Update VC++ Projects...". Install v120 to build using the v120 build tools.
+     1>Done Building Project "D:\Github\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:00.62
+Time Elapsed 00:00:00.01

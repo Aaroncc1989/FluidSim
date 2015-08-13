@@ -21,6 +21,7 @@ public:
 
 	void DrawPoints();
 	void Update();
+	void AddSphere();
 	uint CreateVBO(uint size,ParticleArray index);
 	void InitColor();
 	void SetArray(ParticleArray array, const float *data, int start, int count);

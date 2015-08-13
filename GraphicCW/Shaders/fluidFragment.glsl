@@ -8,29 +8,9 @@ uniform mat4 projMatrix;
 uniform mat4 viewMatrix;
 
 in vec2 coords;
-in mat3 normalMatrix;
+//in mat3 normalMatrix;
 out vec4 gl_FragColor;
 
-float linearizeDepth(float exp_depth, float near, float far) {
-	return	(2.0f * near) / (far + near - exp_depth * (far - near));
-}
-
-vec3 uvToEye(vec2 texCoord, float depth){
-	float x = texCoord.x * 2.0 - 1.0;
-	float y = texCoord.y * 2.0 - 1.0;
-	vec4 clipPos = vec4(x, y, depth, 1.0f);
-	vec4 viewPos = inverse(projMatrix) * clipPos;
-	return viewPos.xyz / viewPos.w;
-}
-
-vec3 getEyePos(vec2 texCoord, vec2 offset){
-	float depth = texture(diffuseTex, texCoord + offset).r;
-	if (depth == 0.0f)
-	{
-		depth = texture(diffuseTex, texCoord).r;
-	}
-	return uvToEye(texCoord, depth);
-}
 
 vec3 eyespaceNormal(vec2 pos) {
 	vec2 screenSize = vec2(0);
@@ -44,10 +24,14 @@ vec3 eyespaceNormal(vec2 pos) {
 
 	float zdxp = texture(diffuseTex, pos + dx);
 	float zdxn = texture(diffuseTex, pos - dx);
+	//if (zdxp == 0) zdxp = zc;
+	//if (zdxn == 0) zdxn = zc;
 	float zdx = (zdxp == 0.0f) ? (zdxn == 0.0f ? 0.0f : (zc - zdxn)) : (zdxp - zc);
 
 	float zdyp = texture(diffuseTex, pos + dy);
 	float zdyn = texture(diffuseTex, pos - dy);
+	//if (zdyp == 0) zdyp = zc;
+	//if (zdyn == 0) zdyn = zc;
 	float zdy = (zdyp == 0.0f) ? (zdyn == 0.0f ? 0.0f : (zc - zdyn)) : (zdyp - zc);
 
 	float cx = 2.0f / (screenSize.x * -projMatrix[0][0]);
@@ -61,8 +45,6 @@ vec3 eyespaceNormal(vec2 pos) {
 	vec3 pdx = (vec3(cx * zc + wx * zdx, wy * zdx, zdx));
 	vec3 pdy = (vec3(wx * zdy, cy * zc + wy * zdy, zdy));
 
-	//vec3 n = vec3(-cy*zdx, -cx*zdy, cx*cy*zc) * zc;
-	//return n;
 	return normalize(cross(pdx, pdy));
 }
 
@@ -87,7 +69,7 @@ void main(void){
 	float thickness = texture(thicknessTex, coords);
 	//calculate normal
 	vec3 normal = eyespaceNormal(coords);
-	normal = normalize(normalMatrix * normal);
+	normal = normalize(transpose(mat3(viewMatrix)) * normal);
 
 	vec3 lightDir = vec3(0.577f, -0.577f, 0.577f);
 	thickness /= 5.0f;

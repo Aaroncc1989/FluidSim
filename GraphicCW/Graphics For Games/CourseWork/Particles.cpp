@@ -75,6 +75,43 @@ void Particles::InitParticle()
  	SetArray(VELOCITY, vel, 0, numParticles);
 }
 
+void Particles::AddSphere()
+{
+	uint index = 0;
+	int r=8;
+	int num = 2000;
+    for (int z=-r; z<=r; z++)
+    {
+        for (int y=-r; y<=r; y++)
+        {
+            for (int x=-r; x<=r; x++)
+            {
+				float dx = x*mparams.radius*2.0f;
+                float dy = y*mparams.radius*2.0f;
+                float dz = z*mparams.radius*2.0f;
+                float l = sqrtf(dx*dx + dy*dy + dz*dz);
+
+				if ((index < num))
+				{
+					pos[index * 4] = 2.0f + dx;
+					pos[index * 4 + 1] = 3.0f + dy;
+					pos[index * 4 + 2] = 2.0f + dz;
+					pos[index * 4 + 3] = 0;
+
+					vel[index * 4] = 0;
+					vel[index * 4 + 1] = 0;
+					vel[index * 4 + 2] = 0;
+					vel[index * 4 + 3] = 0;
+					index++;
+				}
+            }
+        }
+    }
+
+	SetArray(POSITION, pos, 0, num);
+ 	SetArray(VELOCITY, vel, 0, num);
+}
+
 void Particles::InitMemory()
 {
 	assert(!initFlag);
