@@ -43,7 +43,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	GenerateBuffers();
 	init = true;
 	smoothSwitch = false;
-	tmp = 200;
+	tmp = 120;
 }
 Renderer ::~Renderer(void) {
 	delete camera;
@@ -86,10 +86,9 @@ void Renderer::RenderScene() {
 	Drawbg();
 	DrawParticle();
 	RendThickness();
-	//CurFlowSmoothing();
 	BilateralFilter();
-	//DrawFluid();
-
+	CurFlowSmoothing();
+	DrawFluid();
 	SwapBuffers();
 }
 
@@ -100,7 +99,7 @@ void Renderer::Drawbg()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	SetCurrentShader(sceneShader);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Translation(Vector3(0, -1, 0)) * Matrix4::Scale(Vector3(200, 200, 200)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(0, -1, 0)) * Matrix4::Scale(Vector3(500, 500, 500)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	quad->SetTexture(quadtxt);
 	quad->Draw();
@@ -117,7 +116,7 @@ void Renderer::DrawParticle()
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
 	SetCurrentShader(particleShader);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(-500, 0, -500)) * Matrix4::Scale(Vector3(10, 10, 10)) *  Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -138,7 +137,7 @@ void Renderer::RendThickness()
 	glDisable(GL_DEPTH_TEST);
 	SetCurrentShader(thickness);
 	glUseProgram(currentShader->GetProgram());
-	modelMatrix = Matrix4::Scale(Vector3(100, 100, 100)) * Matrix4::Translation(Vector3(-2, 0, -2)) * Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = Matrix4::Translation(Vector3(-500, 0, -500)) * Matrix4::Scale(Vector3(10, 10, 10)) *  Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "point"), 1);
 	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pointRadius"), particle->mparams.radius);
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
@@ -147,6 +146,28 @@ void Renderer::RendThickness()
 	particle->DrawPoints();
 	glUseProgram(0);
 	glDisable(GL_BLEND);
+}
+
+void Renderer::BilateralFilter()
+{
+	SetCurrentShader(bilateralFilter);
+	glUseProgram(currentShader->GetProgram());
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[1]);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pixel"), 1.0f / width);
+	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "blurDir"), 1.0f, 0);
+	quad->SetTexture(bufferColourTex[THICKNESS]);
+	quad->Draw();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[THICKNESS]);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "pixel"), 1.0f / height);
+	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "blurDir"), 0, 1.0f);
+	quad->SetTexture(bufferColourTex[1]);
+	quad->Draw();
+
+	glUseProgram(0);
 }
 
 void Renderer::CurFlowSmoothing()
@@ -162,22 +183,11 @@ void Renderer::CurFlowSmoothing()
 	for (int i = 0; i < smoothingIterations; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO[1 - pingpong]);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		quad->SetTexture(bufferColourTex[pingpong]);
 		quad->Draw();
 		pingpong = 1 - pingpong;
 	}
-	glUseProgram(0);
-}
-
-void Renderer::BilateralFilter()
-{
-	if (!smoothSwitch) return;
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	SetCurrentShader(bilateralFilter);
-	glUseProgram(currentShader->GetProgram());
-	quad->SetTexture(bufferColourTex[0]);
-	quad->Draw();
 	glUseProgram(0);
 }
 

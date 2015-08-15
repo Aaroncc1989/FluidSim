@@ -24,14 +24,10 @@ vec3 eyespaceNormal(vec2 pos) {
 
 	float zdxp = texture(diffuseTex, pos + dx);
 	float zdxn = texture(diffuseTex, pos - dx);
-	//if (zdxp == 0) zdxp = zc;
-	//if (zdxn == 0) zdxn = zc;
 	float zdx = (zdxp == 0.0f) ? (zdxn == 0.0f ? 0.0f : (zc - zdxn)) : (zdxp - zc);
 
 	float zdyp = texture(diffuseTex, pos + dy);
 	float zdyn = texture(diffuseTex, pos - dy);
-	//if (zdyp == 0) zdyp = zc;
-	//if (zdyn == 0) zdyn = zc;
 	float zdy = (zdyp == 0.0f) ? (zdyn == 0.0f ? 0.0f : (zc - zdyn)) : (zdyp - zc);
 
 	float cx = 2.0f / (screenSize.x * -projMatrix[0][0]);
@@ -76,7 +72,7 @@ void main(void){
 	vec4 particleColor = vec4(exp(-0.6f*thickness), exp(-0.2f*thickness), exp(-0.05f*thickness), 1 - exp(-3.0f*thickness));
 	float lambert = abs(dot(normal, lightDir)) * 0.5f+0.5f;
 
-	gl_FragColor = vec4(lambert * particleColor.xyz*0.8f + particleColor.xyz*0.2, 0.9f);
+	gl_FragColor = vec4(lambert * particleColor.xyz * 0.8f + particleColor.xyz * 0.2, 0.9f);
 	//gl_FragColor = vec4(normal, 1.0f);
 	//gl_FragColor = vec4(vec3(depth), 1.0f);
 }

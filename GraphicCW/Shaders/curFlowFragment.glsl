@@ -65,7 +65,7 @@ void main (void){
 		outDepth = 0.0f;
 	}
 	else {
-		const float dt = 0.05f;
+		const float dt = 0.06f;
 		const float dzt = 10.0f;
 		vec3 dxyz = curFlowSmoothing(coords);
 

@@ -1,13 +1,6 @@
 #ifndef _PARTICLES_KERNEL_H_
 #define _PARTICLES_KERNEL_H_
 #pragma once
-#define CUTOFFDIST			1.f
-#define STIFFNESS			0.03f			//pressure coeffience
-#define SCALE               16.f
-#define RESTRHO				1.8f			//rest state density
-#define VISALPHA			0.05f			//visalocity
-#define TENSIONSCALE        0.001f			//scale of tension
-
 #include <stdio.h>
 #include <math.h>
 #include "helper_math.h"
@@ -15,7 +8,6 @@
 #include "Parameters.cuh"
 
 #define FETCH(t, i) t[i]
-
 
 __constant__ SimParams params;
 
@@ -267,7 +259,7 @@ uint   *cellEnd)
 			float dist = length(pos1 - pos2) * params.scale;
 
 			float h = params.cutoffdist;
-			if (dist >= 0 && dist <= h)
+			if (dist >= 0 && dist < h)
 			{
 				w += 315.f / (64.f * CUDART_PI_F * pow(h, 9)) * pow(h*h - dist*dist, 3);			//calculate density
 				pos.w ++;																		//count the num of neighbor
@@ -349,27 +341,32 @@ float &curvature
 				float3 pos2 = make_float3(FETCH(oldPos, j));
 				float3 vel2 = make_float3(FETCH(oldVel, j));
 
+				//force += collideSpheres(pos1,pos2,vel1,vel2,params.radius,params.radius,params.attraction);
+
 				float3 relPos = pos1 - pos2;
 				float dist = length(relPos);
 				float3 normal = relPos / dist;
 				dist = dist * params.scale;
 
 				float h = params.cutoffdist;
-				if (dist >= 0 && dist <= h)
+				if (dist >= 0 && dist < h)
 				{
 					float l = h*h - dist*dist;
 					float grad = -dist * 945.f / (32.f*CUDART_PI_F*pow(h, 9)) * l*l;						//gradient of kernel
 					float lapla = 945.f / (8.f * CUDART_PI_F*pow(h, 9)) * l * (dist*dist - 3.f / 4.f * l);	//laplacian of kernel
 
 					float p1 = params.stiffness * (vel.w - params.restRHO);							// pressure at i 
-					float rho = FETCH(oldVel, j).w;													//density at j
-					float p2 = params.stiffness * (rho - params.restRHO);							//pressure at j
+					float rho2 = FETCH(oldVel, j).w;													//density at j
+					float p2 = params.stiffness * (rho2 - params.restRHO);							//pressure at j
 							
-					float press = -(p1 + p2) * grad / (rho*2.0f);									//force of pressure
-					float3 visco = (vel2 - vel1) * lapla / rho * params.visalocityScale;			//viscosity of pressure
+					float press = -(p1 + p2) * grad / (rho2*2.0f);									//force of pressure
+					float3 relVel = vel2 - vel1;
+					float3 tanVel = relVel - (dot(relVel, normal) * normal);
+					float3 visco = (relVel+tanVel) * lapla / rho2 * params.visalocityScale;			//viscosity of pressure
 					
-					surnormal = surnormal + (grad / rho) * normal;
-					curvature = curvature + (lapla / rho);
+
+					surnormal = surnormal + (grad / rho2) * normal;
+					curvature = curvature + (lapla / rho2);
 					force = force + press * normal + visco;											//final force
 				}
 			}
@@ -425,7 +422,7 @@ uint    numParticles)
 	{
 		tension = -params.tensionScale * curvature * normalize(surNormal);
 	}
-	force = params.gravity + force / rho + tension;
+	force = params.gravity + force / rho/* + tension*/;
 	// collide with cursor sphere
 	//force += collideSpheres(pos1, params.colliderPos, vel1, make_float3(0.0f, 0.0f, 0.0f), params.radius, params.colliderRadius, 0.0f);
 

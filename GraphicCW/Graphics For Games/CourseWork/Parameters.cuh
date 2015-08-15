@@ -22,6 +22,7 @@ struct SimParams
 	float boundaryDamping;
 	float shear;
 	float spring;
+	float attraction;
 
 	float cutoffdist;
 	float stiffness;

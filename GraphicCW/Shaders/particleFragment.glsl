@@ -24,5 +24,5 @@ void main(void){
 
 	float z = IN.eyespacePos.z + normal.z * IN.eyespaceRadius;
 	gl_FragDepth = projectZ(z, 1.0f, 10000.0f);
-	depth = z+1000.0f;
+	depth = z+5000.0f;
 }

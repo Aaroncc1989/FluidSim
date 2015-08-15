@@ -57,9 +57,9 @@ void Particles::InitParticle()
 
 				if (i < numParticles)
 				{
-					pos[i * 4] = (mparams.radius* 2.f * x);
-					pos[i * 4 + 1] = (mparams.radius* 2.f * y);
-					pos[i * 4 + 2] = (mparams.radius* 2.f * z);
+					pos[i * 4] =(mparams.radius* 2.f * x*0.9f);
+					pos[i * 4 + 1] =(mparams.radius* 2.f * y*0.9f);
+					pos[i * 4 + 2] =(mparams.radius* 2.f * z *0.9f);
 					pos[i * 4 + 3] = 1.0f;
 
 					vel[i * 4] = 0;
@@ -87,7 +87,7 @@ void Particles::AddSphere()
             for (int x=-r; x<=r; x++)
             {
 				float dx = x*mparams.radius*2.0f;
-                float dy = y*mparams.radius*2.0f;
+				float dy = y*mparams.radius*2.0f;
                 float dz = z*mparams.radius*2.0f;
                 float l = sqrtf(dx*dx + dy*dy + dz*dz);
 
@@ -207,28 +207,31 @@ void Particles::SetArray(ParticleArray array, const float *data, int start, int 
 
 void Particles::InitParams()
 {
-	mparams.radius = 1.0f/(16.f*2.0f);
-	mparams.gridSize = 4;
+	mparams.radius = 0.5f;
+	mparams.gridSize = 128;
 	mparams.cellSize = mparams.radius * 2.0f;
 	mparams.cellNum = mparams.gridSize / mparams.cellSize;
 	
 	mparams.wholeNumCells = pow(mparams.cellNum,3);
 	mparams.worldPos = make_float3(0,0,0);
 	mparams.colliderRadius = 0.9f * mparams.radius;
-	mparams.gravity = make_float3(0.0f, -0.0001f, 0.0f);
-	mparams.timeStep = 2.0f;
+	mparams.gravity = make_float3(0.0f, -9.81f, 0.0f);
+	mparams.timeStep = 0.001f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 1.0f;
-	mparams.damping = 0.02f;
-	numParticles = 50000;
+	numParticles = 500;
 
-	//coeffecient
+	//fluid coeffecient
 	mparams.cutoffdist = 1.0f;
-	mparams.stiffness = 0.02f;
-	mparams.scale = 16.0f;
-	mparams.restRHO = 1.50f;
-	mparams.visalocityScale = 0.05f;
+	mparams.stiffness = 500.0f;
+	mparams.scale = 1.0f;
+	mparams.restRHO = 1.7f;
+	mparams.visalocityScale = 0.1f;
 	mparams.tensionScale = 0.001f;
+	mparams.spring = 200.0f;
+	mparams.shear = 0.1f;
+	mparams.damping = 0.0f;
+	mparams.attraction = 0.0f;
 }
 
 void Particles::Update()
