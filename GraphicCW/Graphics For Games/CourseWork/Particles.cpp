@@ -20,7 +20,6 @@ Particles::Particles()
 }
 
 
-
 Particles::~Particles()
 {
 	assert(initFlag);
@@ -45,21 +44,21 @@ Particles::~Particles()
 
 void Particles::InitParticle()
 {
-	int numCells = mparams.cellNum;
+	uint3 numCells = mparams.cellNum;
 
-	for (int z = 0; z < numCells; z++)
+	for (int z = 0; z < numCells.z; z++)
 	{
-		for (int y = 0; y < numCells/2; y++)
+		for (int y = 0; y < numCells.y; y++)
 		{
-			for (int x = 0; x < numCells; x++)
+			for (int x = 0; x < numCells.x; x++)
 			{
-				int i = (z * numCells * numCells/2) + (y * numCells) + x;
+				int i = (z * numCells.y * numCells.x) + (y * numCells.x) + x;
 
 				if (i < numParticles)
 				{
-					pos[i * 4] =(mparams.radius* 2.f * x*0.9f);
-					pos[i * 4 + 1] =(mparams.radius* 2.f * y*0.9f);
-					pos[i * 4 + 2] =(mparams.radius* 2.f * z *0.9f);
+					pos[i * 4] = (mparams.radius* 2.f * x *0.9f);
+					pos[i * 4 + 1] = (mparams.radius* 2.f * y*0.9f);
+					pos[i * 4 + 2] = (mparams.radius* 2.f * z *0.9f);
 					pos[i * 4 + 3] = 1.0f;
 
 					vel[i * 4] = 0;
@@ -72,44 +71,7 @@ void Particles::InitParticle()
 	}
 
 	SetArray(POSITION, pos, 0, numParticles);
- 	SetArray(VELOCITY, vel, 0, numParticles);
-}
-
-void Particles::AddSphere()
-{
-	uint index = 0;
-	int r=8;
-	int num = 2000;
-    for (int z=-r; z<=r; z++)
-    {
-        for (int y=-r; y<=r; y++)
-        {
-            for (int x=-r; x<=r; x++)
-            {
-				float dx = x*mparams.radius*2.0f;
-				float dy = y*mparams.radius*2.0f;
-                float dz = z*mparams.radius*2.0f;
-                float l = sqrtf(dx*dx + dy*dy + dz*dz);
-
-				if ((index < num))
-				{
-					pos[index * 4] = 2.0f + dx;
-					pos[index * 4 + 1] = 3.0f + dy;
-					pos[index * 4 + 2] = 2.0f + dz;
-					pos[index * 4 + 3] = 0;
-
-					vel[index * 4] = 0;
-					vel[index * 4 + 1] = 0;
-					vel[index * 4 + 2] = 0;
-					vel[index * 4 + 3] = 0;
-					index++;
-				}
-            }
-        }
-    }
-
-	SetArray(POSITION, pos, 0, num);
- 	SetArray(VELOCITY, vel, 0, num);
+	SetArray(VELOCITY, vel, 0, numParticles);
 }
 
 void Particles::InitMemory()
@@ -208,18 +170,18 @@ void Particles::SetArray(ParticleArray array, const float *data, int start, int 
 void Particles::InitParams()
 {
 	mparams.radius = 0.5f;
-	mparams.gridSize = 128;
+	mparams.gridSize = make_uint3(64,64,256);
 	mparams.cellSize = mparams.radius * 2.0f;
-	mparams.cellNum = mparams.gridSize / mparams.cellSize;
+	mparams.cellNum = make_uint3(mparams.gridSize.x / mparams.cellSize, mparams.gridSize.y / mparams.cellSize, mparams.gridSize.z / mparams.cellSize);
 	
-	mparams.wholeNumCells = pow(mparams.cellNum,3);
+	mparams.wholeNumCells = mparams.cellNum.x * mparams.cellNum.y*mparams.cellNum.z;
 	mparams.worldPos = make_float3(0,0,0);
 	mparams.colliderRadius = 0.9f * mparams.radius;
 	mparams.gravity = make_float3(0.0f, -9.81f, 0.0f);
 	mparams.timeStep = 0.001f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 1.0f;
-	numParticles = 500;
+	numParticles = 500000;
 
 	//fluid coeffecient
 	mparams.cutoffdist = 1.0f;

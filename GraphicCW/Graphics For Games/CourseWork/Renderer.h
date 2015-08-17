@@ -3,11 +3,13 @@
 #include "../../nclgl/OGLRenderer.h"
 #include "../../nclgl/Camera.h"
 #include "../../nclgl/HeightMap.h"
+#include "../../nclgl/OBJMesh.h"
 
 enum FBOINDEX
 {
+	SMOOTH0,
+	SMOOTH1,
 	PARTICLE,
-	CURVATURE,
 	THICKNESS
 };
 
@@ -35,7 +37,10 @@ protected:
 	Camera * camera;
 	Light * light;
 	Mesh* quad;
+	Mesh* ground;
+	Mesh* solidSphere;
 	unsigned int quadtxt;
+	unsigned int spheretxt;
 	int tmp;
 
 	Shader* sceneShader;
@@ -47,7 +52,7 @@ protected:
 
 	GLuint bufferFBO[4]; // FBO for our G-Buffer pass
 	GLuint bufferColourTex[4]; // Albedo goes here
-	GLuint bufferDepthTex; // Depth goes here
+	GLuint bufferDepthTex[4]; // Depth goes here
 
 	bool smoothSwitch;
 };

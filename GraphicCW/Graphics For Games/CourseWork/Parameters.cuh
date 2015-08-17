@@ -12,9 +12,9 @@ struct SimParams
 	float radius;
 	float timeStep;
 
-	uint gridSize;				//per axis
+	uint3 gridSize;				//per axis
 	float cellSize;
-	uint cellNum;				//per axis
+	uint3 cellNum;				//per axis
 	uint wholeNumCells;
 	float3 worldPos;
 

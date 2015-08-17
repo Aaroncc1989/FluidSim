@@ -28,7 +28,7 @@ struct integrate_functor
 		float3 pos = make_float3(posData.x, posData.y, posData.z);
 		float3 vel = make_float3(velData.x, velData.y, velData.z);
 
-		int size = params.gridSize;
+		uint3 size = params.gridSize;
 		//vel += params.gravity * deltaTime;
 		vel *= params.globalDamping;
 
@@ -38,9 +38,9 @@ struct integrate_functor
 		// set this to zero to disable collisions with cube sides
 #if 1
 
-		if (pos.x > size - params.radius)
+		if (pos.x > size.x - params.radius)
 		{
-			pos.x = size - params.radius;
+			pos.x = size.x - params.radius;
 			vel.x *= params.boundaryDamping;
 		}
 
@@ -50,15 +50,15 @@ struct integrate_functor
 			vel.x *= params.boundaryDamping;
 		}
 
-		if (pos.y > size  - params.radius)
+		if (pos.y > size.y  - params.radius)
 		{
-			pos.y = size  - params.radius;
+			pos.y = size.y  - params.radius;
 			vel.y *= params.boundaryDamping;
 		}
 
-		if (pos.z > size - params.radius)
+		if (pos.z > size.z - params.radius)
 		{
-			pos.z = size - params.radius;
+			pos.z = size.z - params.radius;
 			vel.z *= params.boundaryDamping;
 		}
 
@@ -95,10 +95,10 @@ __device__ int3 calcGridPos(float3 p)
 // calculate address in grid from position (clamping to edges)
 __device__ uint calcGridHash(int3 gridPos)
 {
-	gridPos.x = gridPos.x & (params.cellNum - 1);  // wrap grid, assumes size is power of 2
-	gridPos.y = gridPos.y & (params.cellNum - 1);
-	gridPos.z = gridPos.z & (params.cellNum - 1);
-	return __umul24(__umul24(gridPos.z, params.cellNum), params.cellNum) + __umul24(gridPos.y, params.cellNum) + gridPos.x;
+	gridPos.x = gridPos.x & (params.cellNum.x - 1);  // wrap grid, assumes size is power of 2
+	gridPos.y = gridPos.y & (params.cellNum.y - 1);
+	gridPos.z = gridPos.z & (params.cellNum.z - 1);
+	return __umul24(__umul24(gridPos.z, params.cellNum.y), params.cellNum.x) + __umul24(gridPos.y, params.cellNum.x) + gridPos.x;
 }
 
 // calculate grid hash value for each particle
@@ -189,8 +189,6 @@ uint    numParticles)
 		sortedPos[index] = pos;
 		sortedVel[index] = vel;
 	}
-
-
 }
 
 // collide two spheres using DEM method
@@ -317,9 +315,7 @@ float4  vel,
 float4 *oldPos,
 float4 *oldVel,
 uint   *cellStart,
-uint   *cellEnd,
-float3 &surnormal,
-float &curvature
+uint   *cellEnd
 )
 {
 	uint gridHash = calcGridHash(gridPos);
@@ -341,8 +337,6 @@ float &curvature
 				float3 pos2 = make_float3(FETCH(oldPos, j));
 				float3 vel2 = make_float3(FETCH(oldVel, j));
 
-				//force += collideSpheres(pos1,pos2,vel1,vel2,params.radius,params.radius,params.attraction);
-
 				float3 relPos = pos1 - pos2;
 				float dist = length(relPos);
 				float3 normal = relPos / dist;
@@ -362,12 +356,10 @@ float &curvature
 					float press = -(p1 + p2) * grad / (rho2*2.0f);									//force of pressure
 					float3 relVel = vel2 - vel1;
 					float3 tanVel = relVel - (dot(relVel, normal) * normal);
-					float3 visco = (relVel+tanVel) * lapla / rho2 * params.visalocityScale;			//viscosity of pressure
-					
+					float3 visco = relVel*lapla / rho2 * params.visalocityScale;			//viscosity of pressure
+					float3 foamForce = params.shear * tanVel;
 
-					surnormal = surnormal + (grad / rho2) * normal;
-					curvature = curvature + (lapla / rho2);
-					force = force + press * normal + visco;											//final force
+					force = force + press * normal + visco + foamForce;											//final force
 				}
 			}
 		}
@@ -409,7 +401,7 @@ uint    numParticles)
 			for (int x = -1; x <= 1; x++)
 			{
 				int3 neighbourPos = gridPos + make_int3(x, y, z);
-				force += calcForceD(neighbourPos, index, pos, vel, oldPos, oldVel, cellStart, cellEnd,surNormal,curvature);
+				force += calcForceD(neighbourPos, index, pos, vel, oldPos, oldVel, cellStart, cellEnd);
 			}
 		}
 	}
@@ -418,10 +410,7 @@ uint    numParticles)
 	float count = pos.w;
 	float3 pos1 = make_float3(pos);
 	float3 vel1 = make_float3(vel);
-	if (dot(surNormal, surNormal) > 3.0f)
-	{
-		tension = -params.tensionScale * curvature * normalize(surNormal);
-	}
+
 	force = params.gravity + force / rho/* + tension*/;
 	// collide with cursor sphere
 	//force += collideSpheres(pos1, params.colliderPos, vel1, make_float3(0.0f, 0.0f, 0.0f), params.radius, params.colliderRadius, 0.0f);

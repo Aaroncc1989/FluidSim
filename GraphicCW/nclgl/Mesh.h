@@ -21,6 +21,8 @@ public :
 	void SetBumpMap ( GLuint tex ) { bumpTexture = tex ;}
 	GLuint GetBumpMap () { return bumpTexture ;}
 
+	void SetTextureAndBumpmapRepeat(const bool& isRepeating);
+
 protected :
 	void BufferData();
 	void GenerateNormals();

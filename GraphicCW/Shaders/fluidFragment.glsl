@@ -2,6 +2,7 @@
 
 uniform sampler2D diffuseTex;
 uniform sampler2D thicknessTex;
+uniform sampler2D pixelDepthTex;
 
 uniform vec2 pixelSize;
 uniform mat4 projMatrix;
@@ -62,6 +63,8 @@ void main(void){
 	float depth = texture(diffuseTex, coords);
 	if (depth == 0.0f){ discard; }
 
+	gl_FragDepth = texture(pixelDepthTex, coords);
+
 	float thickness = texture(thicknessTex, coords);
 	//calculate normal
 	vec3 normal = eyespaceNormal(coords);
@@ -74,5 +77,5 @@ void main(void){
 
 	gl_FragColor = vec4(lambert * particleColor.xyz * 0.8f + particleColor.xyz * 0.2, 0.9f);
 	//gl_FragColor = vec4(normal, 1.0f);
-	//gl_FragColor = vec4(vec3(depth), 1.0f);
+	//gl_FragColor = vec4(vec3(pixelDepth), 1.0f);
 }

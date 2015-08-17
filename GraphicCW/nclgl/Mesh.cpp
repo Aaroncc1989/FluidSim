@@ -305,3 +305,14 @@ void Mesh :: GenerateNormals ()
 		normals [i].Normalise ();
 	}
 }
+
+void Mesh::SetTextureAndBumpmapRepeat(const bool& isRepeating)
+{
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, isRepeating ? GL_REPEAT : GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, isRepeating ? GL_REPEAT : GL_CLAMP);
+	glBindTexture(GL_TEXTURE_2D, bumpTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, isRepeating ? GL_REPEAT : GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, isRepeating ? GL_REPEAT : GL_CLAMP);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}

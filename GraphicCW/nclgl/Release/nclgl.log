@@ -1,11 +1,11 @@
-﻿Build started 07/08/2015 12:33:08.
-     1>Project "D:\GitHub\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" on node 2 (Build target(s)).
+﻿Build started 17/08/2015 14:15:16.
+     1>Project "D:\Github\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt CubeRobot.cpp OBJMesh.cpp
          CubeRobot.cpp
          OBJMesh.cpp
        Lib:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Release\nclgl.lib" /NOLOGO /LTCG Release\Camera.obj
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\nclgl.lib" /NOLOGO /LTCG Release\Camera.obj
          Release\CubeRobot.obj
          Release\Frustum.obj
          Release\GameTimer.obj
@@ -28,9 +28,9 @@
          Release\TextMesh.obj
          Release\TreeMesh.obj
          Release\Window.obj
-         nclgl.vcxproj -> D:\GitHub\FluidSim\GraphicCW\Graphics For Games\Release\nclgl.lib
-     1>Done Building Project "D:\GitHub\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" (Build target(s)).
+         nclgl.vcxproj -> D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\nclgl.lib
+     1>Done Building Project "D:\Github\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.43
+Time Elapsed 00:00:01.62

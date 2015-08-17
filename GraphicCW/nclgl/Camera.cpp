@@ -32,10 +32,10 @@ void Camera :: UpdateCamera(float msec) {
 			Vector3 ( -1.0f ,0.0f ,0.0f) * msec ;
 	}
 
-	if( Window :: GetKeyboard ()-> KeyDown ( KEYBOARD_SHIFT )) {
+	if( Window :: GetKeyboard ()-> KeyDown ( KEYBOARD_Q )) {
 		position .y += msec ;
 	}
-	if( Window :: GetKeyboard ()-> KeyDown ( KEYBOARD_SPACE )) {
+	if (Window::GetKeyboard()->KeyDown(KEYBOARD_E)) {
 		position .y -= msec ;
 	}
 }
