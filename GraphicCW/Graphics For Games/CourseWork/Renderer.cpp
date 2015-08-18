@@ -1,9 +1,9 @@
 #include "Renderer.h"
 Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
-	//camera = new Camera(0.0f, 0.0f, Vector3(
-	//	RAW_WIDTH * HEIGHTMAP_X / 2.0f, 500, RAW_HEIGHT * HEIGHTMAP_Z));
+	camera = new Camera(0.0f, 0.0f, Vector3(
+		RAW_WIDTH * HEIGHTMAP_X / 2.0f, 500, RAW_HEIGHT * HEIGHTMAP_Z/3.0f));
 
-	camera = new Camera(0.0f, 0.0f, Vector3(50, 50, -100));
+	//camera = new Camera(0.0f, 0.0f, Vector3(50, 50, -100));
 
 	particle = new Particles();
 	particle->Init();
@@ -49,7 +49,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	GenerateBuffers();
 	init = true;
 	smoothSwitch = false;
-	tmp = 200;
+	tmp = 120;
 }
 Renderer ::~Renderer(void) {
 	delete camera;
@@ -82,10 +82,16 @@ void Renderer::UpdateScene(float msec) {
 	{
 		smoothSwitch = !smoothSwitch;
 	}
+	bool stop = false;
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+	{
+		stop = !stop;
+	}
+	while (stop)
 	{
 		
 	}
+
 	particle->Update();
 }
 
@@ -111,8 +117,16 @@ void Renderer::Drawbg()
 	modelMatrix = Matrix4::Translation(Vector3(0, -5, 0)) * Matrix4::Scale(Vector3(320, 500, 1280)) * Matrix4::Rotation(90, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	ground->Draw();
+	//build solid modelMatrix
+	float* solidPos = new float[4];
+	memset(solidPos, 0, sizeof(float)* 4);
+	particle->GetSolidPos(solidPos);
+	Matrix4 trans;
+	trans.SetPositionVector(Vector3(solidPos[0], solidPos[1], solidPos[2]));
+	delete[]solidPos;
+	modelMatrix = Matrix4::Translation(Vector3(-320, 0, -1280)) * Matrix4::Scale(Vector3(10, 10, 10)) *  Matrix4::Rotation(0, Vector3(1.f, 0, 0));
+	modelMatrix = modelMatrix * trans * Matrix4::Scale(Vector3(10, 10, 10));
 
-	modelMatrix = Matrix4::Translation(Vector3(0, 100, 0))*Matrix4::Scale(Vector3(100, 100, 100))*Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	UpdateShaderMatrices();
 	solidSphere->Draw();
 	glUseProgram(0);

@@ -14,7 +14,6 @@ extern "C"
 	void *mapGLBufferObject(struct cudaGraphicsResource **cuda_vbo_resource);
 	void unmapGLBufferObject(struct cudaGraphicsResource *cuda_vbo_resource);
 
-
 	void setParameters(SimParams *hostParams);
 
 	void integrateSystem(float *pos,
@@ -44,8 +43,8 @@ extern "C"
 		uint  *gridParticleIndex,
 		uint  *cellStart,
 		uint  *cellEnd,
-		uint   numParticles,
-		uint   numCells);
+		uint   numParticles, float *pushForce, float *solidPos);
+
 
 	void sortParticles(uint *dGridParticleHash, uint *dGridParticleIndex, uint numParticles);
 }

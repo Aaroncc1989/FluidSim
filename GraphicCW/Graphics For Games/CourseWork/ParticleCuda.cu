@@ -189,8 +189,7 @@ extern "C"
 		uint  *gridParticleIndex,
 		uint  *cellStart,
 		uint  *cellEnd,
-		uint   numParticles,
-		uint   numCells)
+		uint   numParticles,float *pushForce,float *solidPos)
 	{
 		// thread per particle
 		uint numThreads, numBlocks;
@@ -214,12 +213,19 @@ extern "C"
 			cellStart,
 			cellEnd,
 			numParticles);
-
 		// check if kernel invocation generated an error
 		getLastCudaError("Kernel execution failed");
 
-	}
+		interAct << < numBlocks, numThreads >> >((float4 *)newVel, 
+			(float4 *)pushForce,
+			(float4 *)solidPos,
+			(float4 *)sortedPos,
+			(float4 *)sortedVel,
+			gridParticleIndex,
+			numParticles);
 
+		getLastCudaError("Kernel execution failed");
+	}
 
 	void sortParticles(uint *dGridParticleHash, uint *dGridParticleIndex, uint numParticles)
 	{
@@ -227,5 +233,4 @@ extern "C"
 			thrust::device_ptr<uint>(dGridParticleHash + numParticles),
 			thrust::device_ptr<uint>(dGridParticleIndex));
 	}
-
 }

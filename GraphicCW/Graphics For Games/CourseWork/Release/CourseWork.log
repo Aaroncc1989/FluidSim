@@ -1,13 +1,33 @@
-﻿Build started 17/08/2015 14:36:14.
-     1>Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I./ /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" /I../../common/inc /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Particles.cpp Renderer.cpp
+﻿Build started 18/08/2015 22:42:58.
+     1>Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" on node 2 (Rebuild target(s)).
+     1>CudaClean:
+         cmd.exe /C "C:\Users\cmdadmin\AppData\Local\Temp\tmp2f9a8fbd8e2e414db3a71a25c2a82d9d.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile      -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" -clean
+         
+         D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile      -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" -clean 
+         ParticleCuda.cu
+       AddCudaCompileDeps:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /DWIN32 /DNDEBUG /D_CONSOLE /D_UNICODE /DUNICODE /I./ /I../../common/inc /I./ /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" /I../../common/inc /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I. /FIcuda_runtime.h /c "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" 
+       CudaBuild:
+         Compiling CUDA source file ParticleCuda.cu...
+         cmd.exe /C "C:\Users\cmdadmin\AppData\Local\Temp\tmp366d8a61d7c948ebabad2f504913fddc.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2013 -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile -cudart static     -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu"
+         
+         D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2013 -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I./ -I../../common/inc -I./ -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" -I../../common/inc -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile -cudart static     -DWIN32 -DNDEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ParticleCuda.cu.obj "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\ParticleCuda.cu" 
+     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(246): warning : variable "vel" was declared but never referenced
+     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(431): warning : variable "count" was declared but never referenced
+     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(246): warning : variable "vel" was declared but never referenced
+     1>d:\github\fluidsim\graphiccw\graphics for games\coursework\ParticleCudaImp.cuh(431): warning : variable "count" was declared but never referenced
+         ParticleCuda.cu
+       ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I./ /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\/include" /I../../common/inc /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp Particles.cpp Renderer.cpp
+         Main.cpp
          Particles.cpp
-     1>Particles.cpp(49): warning C4018: '<' : signed/unsigned mismatch
-     1>Particles.cpp(51): warning C4018: '<' : signed/unsigned mismatch
-     1>Particles.cpp(53): warning C4018: '<' : signed/unsigned mismatch
-     1>Particles.cpp(137): warning C4018: '<' : signed/unsigned mismatch
-     1>Particles.cpp(175): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>Particles.cpp(50): warning C4018: '<' : signed/unsigned mismatch
+     1>Particles.cpp(52): warning C4018: '<' : signed/unsigned mismatch
+     1>Particles.cpp(54): warning C4018: '<' : signed/unsigned mismatch
+     1>Particles.cpp(139): warning C4018: '<' : signed/unsigned mismatch
+     1>Particles.cpp(177): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
          Renderer.cpp
        Link:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\FluidSim.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\Win32" /LIBPATH:../../common/lib/Win32 cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\FluidSim.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\FluidSim.lib" /MACHINE:X86 /SAFESEH Release\ParticleCuda.cu.obj
@@ -21,8 +41,8 @@
      1>SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\vc120.pdb'; linking object as if no debug info
      1>SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'SOIL.lib(image_DXT.obj)' or at 'D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\vc120.pdb'; linking object as if no debug info
          CourseWork.vcxproj -> D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\FluidSim.exe
-     1>Done Building Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" (Build target(s)).
+     1>Done Building Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.65
+Time Elapsed 00:00:18.07

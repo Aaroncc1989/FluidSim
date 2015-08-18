@@ -17,7 +17,7 @@ struct integrate_functor
 	float deltaTime;
 
 	__host__ __device__
-		integrate_functor(float delta_time) : deltaTime(delta_time) {}
+		integrate_functor(float delta_time) : deltaTime(delta_time){}
 
 	template <typename Tuple>
 	__device__
@@ -31,10 +31,8 @@ struct integrate_functor
 		uint3 size = params.gridSize;
 		//vel += params.gravity * deltaTime;
 		vel *= params.globalDamping;
-
 		// new position = old position + velocity * deltaTime
 		pos += vel * deltaTime;
-
 		// set this to zero to disable collisions with cube sides
 #if 1
 
@@ -192,43 +190,6 @@ uint    numParticles)
 }
 
 // collide two spheres using DEM method
-__device__
-float3 collideSpheres(float3 posA, float3 posB,
-float3 velA, float3 velB,
-float radiusA, float radiusB,
-float attraction)
-{
-	// calculate relative position
-	float3 relPos = posB - posA;
-
-	float dist = length(relPos);
-	float collideDist = radiusA + radiusB;
-
-	float3 force = make_float3(0.0f);
-
-	if (dist < collideDist)
-	{
-		float3 norm = relPos / dist;
-
-		// relative velocity
-		float3 relVel = velB - velA;
-
-		// relative tangential velocity
-		float3 tanVel = relVel - (dot(relVel, norm) * norm);
-
-		// spring force
-		force = -params.spring*(collideDist - dist) * norm;
-		// dashpot (damping) force
-		force += params.damping*relVel;
-		// tangential shear force
-		force += params.shear*tanVel;
-		// attraction
-		force += attraction*relPos;
-	}
-
-	return force;
-}
-
 
 __device__
 float calcDensityD(int3    gridPos,
@@ -390,10 +351,6 @@ uint    numParticles)
 	// examine neighbouring cells
 	float3 force = make_float3(0.0f);
 
-	float3 tension = make_float3(0.0f);
-	float3 surNormal = make_float3(0.0f);
-	float curvature = 0.0f;
-
 	for (int z = -1; z <= 1; z++)
 	{
 		for (int y = -1; y <= 1; y++)
@@ -411,12 +368,76 @@ uint    numParticles)
 	float3 pos1 = make_float3(pos);
 	float3 vel1 = make_float3(vel);
 
-	force = params.gravity + force / rho/* + tension*/;
+	force = params.gravity + force / rho;
 	// collide with cursor sphere
-	//force += collideSpheres(pos1, params.colliderPos, vel1, make_float3(0.0f, 0.0f, 0.0f), params.radius, params.colliderRadius, 0.0f);
-
+	//force += collideSpheres(pos1, *solidPos, vel1, make_float3(0.0f, 0.0f, 0.0f), params.radius, params.colliderRadius, 0.0f);
 	// write new velocity back to original unsorted location
 	uint originalIndex = gridParticleIndex[index];
 	newVel[originalIndex] = make_float4(vel1 + force, count);
 }
+
+
+__device__
+float3 collideSpheres(float3 posA, float3 posB,
+float3 velA, float3 velB,
+float solidRadius)
+{
+	// calculate relative position
+	float3 relPos = posB - posA;
+
+	float dist = length(relPos);
+	float collideDist = params.radius + solidRadius;
+
+	float3 force = make_float3(0.0f);
+
+	if (dist < collideDist)
+	{
+		float3 norm = relPos / dist;
+
+		// relative velocity
+		float3 relVel = velB - velA;
+
+		// relative tangential velocity
+		float3 tanVel = relVel - (dot(relVel, norm) * norm);
+
+		// spring force
+		force = -params.spring*(collideDist - dist) * norm;
+		// dashpot (damping) force
+		//force += params.damping*relVel;
+		// tangential shear force
+		//force += params.shear*tanVel;
+		// attraction
+		//force += params.attraction*relPos;
+	}
+
+	return force;
+}
+
+
+__global__ void interAct(float4* newVel,
+	float4* pushForce,
+	float4* solidPos,
+	float4* oldPos,
+	float4* oldVel, 
+	uint   *gridParticleIndex,
+	uint numParticles)
+{
+	uint index = __mul24(blockIdx.x, blockDim.x) + threadIdx.x;
+
+	if (index >= numParticles) return;
+
+	float3 pos = make_float3(FETCH(oldPos, index));
+	float3 vel = make_float3(FETCH(oldVel, index));
+	float count = FETCH(oldVel, index).w;
+
+	int3 gridPos = calcGridPos(pos);
+	float3 force = make_float3(0.0f);
+
+	force += collideSpheres(pos,make_float3(solidPos[0]),vel,make_float3(0.0f),10.0f);
+	pushForce[index] = make_float4(-force,0);
+
+	uint originalIndex = gridParticleIndex[index];
+	newVel[originalIndex] = newVel[originalIndex] + make_float4(force, 0);
+}
+
 #endif

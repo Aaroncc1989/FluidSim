@@ -1,18 +1,18 @@
 #pragma once
 #include "Parameters.cuh"
 
+enum ParticleArray
+{
+	POSITION,
+	COLOR,
+	VELOCITY
+};
+
 class Particles
 {
 public:
 	Particles();
 	~Particles();
-
-	enum ParticleArray
-	{
-		POSITION,
-		COLOR,
-		VELOCITY
-	};
 
 	void Init();
 	void InitParticle();
@@ -26,10 +26,13 @@ public:
 	void SetArray(ParticleArray array, const float *data, int start, int count);
 	SimParams mparams;
 
+	void InitSolid();
+	void GetSolidPos(float* host);
+	void CheckEdges(float* pos,float* vel);
+
 protected:
 	//particle attribute
 	int numParticles;
-	
 
 	float* pos;
 	float* color;
@@ -37,9 +40,9 @@ protected:
 	float* density;
 	float* normal;
 	float* textureCoord;
-
-	float4* p;
+	float* pushForceHost;
 	//gpu data
+	float* pushForce;
 	float* velGpu;
 	float* posGpu;
 	float* sortedPos;
@@ -56,5 +59,9 @@ protected:
 	bool initFlag;
 	struct cudaGraphicsResource *m_cuda_posvbo_resource; // handles OpenGL-CUDA exchange
 	struct cudaGraphicsResource *m_cuda_colorvbo_resource; // handles OpenGL-CUDA exchange
+
+	//solid data
+	float* solidPos;
+	float* solidVel;
 };
 
