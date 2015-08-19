@@ -18,8 +18,19 @@
   <ItemGroup>
     <ClInclude Include="Particles.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Shaders\bilateralFilterFragment.glsl" />
+    <None Include="..\..\Shaders\bilateralFilterVertex.glsl" />
+    <None Include="..\..\Shaders\curFlowFragment.glsl" />
+    <None Include="..\..\Shaders\curFlowVertex.glsl" />
+    <None Include="..\..\Shaders\fluidFragment.glsl" />
+    <None Include="..\..\Shaders\fluidVertex.glsl" />
+    <None Include="..\..\Shaders\particleFragment.glsl" />
+    <None Include="..\..\Shaders\particleVertex.glsl" />
+    <None Include="..\..\Shaders\thicknessFragment.glsl" />
+    <None Include="..\..\Shaders\thicknessVertex.glsl" />
     <None Include="Parameters.cuh" />
     <CudaCompile Include="ParticleCuda.cu">
       <FileType>Document</FileType>

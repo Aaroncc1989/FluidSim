@@ -9,7 +9,8 @@ uniform mat4 projMatrix;
 uniform mat4 viewMatrix;
 
 in vec2 coords;
-//in mat3 normalMatrix;
+in mat3 normalMatrix;
+in mat3 eyeNormalMatrix;
 out vec4 gl_FragColor;
 
 
@@ -68,6 +69,8 @@ void main(void){
 	float thickness = texture(thicknessTex, coords);
 	//calculate normal
 	vec3 normal = eyespaceNormal(coords);
+	//normal = normalize(eyeNormalMatrix*normal);
+	//normal = normalize(normalMatrix * normal);
 	normal = normalize(transpose(mat3(viewMatrix)) * normal);
 
 	vec3 lightDir = vec3(0.577f, -0.577f, 0.577f);
@@ -77,5 +80,5 @@ void main(void){
 
 	gl_FragColor = vec4(lambert * particleColor.xyz * 0.8f + particleColor.xyz * 0.2, 0.9f);
 	//gl_FragColor = vec4(normal, 1.0f);
-	//gl_FragColor = vec4(vec3(pixelDepth), 1.0f);
+	//gl_FragColor = vec4(vec3(depth), 1.0f);
 }

@@ -1,4 +1,4 @@
-﻿Build started 18/08/2015 00:17:34.
+﻿Build started 19/08/2015 15:03:53.
      1>Project "D:\Github\FluidSim\GraphicCW\Graphics For Games\CourseWork\CourseWork.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (CourseWork.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>Link:
@@ -15,4 +15,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.38
+Time Elapsed 00:00:00.43

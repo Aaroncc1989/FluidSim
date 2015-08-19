@@ -85,10 +85,6 @@ void Renderer::UpdateScene(float msec) {
 	bool stop = false;
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 	{
-		stop = !stop;
-	}
-	while (stop)
-	{
 		
 	}
 
