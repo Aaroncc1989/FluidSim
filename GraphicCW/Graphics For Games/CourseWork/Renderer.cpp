@@ -114,12 +114,9 @@ void Renderer::Drawbg()
 	UpdateShaderMatrices();
 	ground->Draw();
 	//build solid modelMatrix
-	float* solidPos = new float[4];
-	memset(solidPos, 0, sizeof(float)* 4);
-	particle->GetSolidPos(solidPos);
-	Matrix4 trans;
-	trans.SetPositionVector(Vector3(solidPos[0], solidPos[1], solidPos[2]));
-	delete[]solidPos;
+
+	Matrix4 trans = particle->BuildTransform();
+
 	modelMatrix = Matrix4::Translation(Vector3(-320, 0, -1280)) * Matrix4::Scale(Vector3(10, 10, 10)) *  Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	modelMatrix = modelMatrix * trans * Matrix4::Scale(Vector3(10, 10, 10));
 

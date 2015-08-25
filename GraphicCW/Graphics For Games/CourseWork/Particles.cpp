@@ -183,7 +183,7 @@ void Particles::InitParams()
 	mparams.timeStep = 0.001f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 1.0f;
-	numParticles = 500000;
+	numParticles = 400000;
 
 	//fluid coeffecient
 	mparams.cutoffdist = 1.0f;
@@ -209,7 +209,7 @@ void Particles::Update()
 	calcHash(gridParticleHash, gridParticleIndex,dPos,numParticles);
 	sortParticles(gridParticleHash,gridParticleIndex,numParticles);
 	reorderDataAndFindCellStart(cellStart,cellEnd,sortedPos,sortedVel,gridParticleHash,gridParticleIndex,dPos,velGpu,numParticles,mparams.wholeNumCells);
-	simFluid(velGpu, sortedPos, sortedVel, gridParticleIndex, cellStart, cellEnd, numParticles,pushForce,solidPos);
+	simFluid(velGpu, sortedPos, sortedVel, gridParticleIndex, cellStart, cellEnd, numParticles, solidPosGpu, solidVelGpu, buoyancyGpu, buoyancyAngGpu);
 	unmapGLBufferObject(m_cuda_posvbo_resource);
 }
 
@@ -222,45 +222,70 @@ void Particles::DrawPoints()
 
 void Particles::InitSolid()
 {
-	//init solidPos
-	cudaMalloc((void **)&solidPos, 4 * sizeof(float));
-	float* pos = new float[4];
-	pos[0] = 20.0f;
-	pos[1] = 10.0f;
-	pos[2] = 150.0f;
-	pos[3] = 0.0f;
-	copyArrayToDevice(solidPos, pos, 0, 4 * sizeof(float));
-	delete[] pos;
-	//allocate push force mem
-	allocateArray((void **)&pushForce, sizeof(float)* 4 * numParticles);
-	cudaMemset(pushForce, 0, sizeof(float)* 4 * numParticles);
-	//allocate local push force mem
-	pushForceHost = new float[4 * numParticles];
-	memset(pushForceHost,0,sizeof(float) * 4 * numParticles);
+	//init solidPos	
+	solidPos = new float[4];
+	solidPos[0] = 20.0f;
+	solidPos[1] = 10.0f;
+	solidPos[2] = 150.0f;
+	solidPos[3] = 0.0f;
+	cudaMalloc((void **)&solidPosGpu, 4 * sizeof(float));
+	copyArrayToDevice(solidPosGpu, solidPos, 0, 4 * sizeof(float));
+
 	//init solid vel
 	solidVel = new float[4];
 	memset(solidVel, 0, sizeof(float)* 4);
+	allocateArray((void **)&solidVelGpu, sizeof(float)* 4);
+	cudaMemset(solidVelGpu, 0, sizeof(float)* 4);
+
+	//buoyancy
+	buoyancy = new float[4 * numParticles];
+	memset(buoyancy, 0, sizeof(float)* 4 * numParticles);
+	allocateArray((void **)&buoyancyGpu, sizeof(float)* 4 * numParticles);
+	cudaMemset(buoyancyGpu, 0, sizeof(float)* 4 * numParticles);
+
+	//buoyancy angular velocity
+	buoyancyAng = new float[4 * numParticles];
+	memset(buoyancyAng, 0, sizeof(float)* 4 * numParticles);
+	allocateArray((void **)&buoyancyAngGpu, sizeof(float)* 4 * numParticles);
+	cudaMemset(buoyancyAngGpu, 0, sizeof(float)* 4 * numParticles);
+	
 }
 
-void Particles::GetSolidPos(float* pos)
+Matrix4 Particles::BuildTransform()
 {
-	copyArrayFromDevice(pos, solidPos, 0, 4 * sizeof(float));
-	copyArrayFromDevice(pushForceHost, pushForce, 0, sizeof(float)* 4 * numParticles);
+	copyArrayFromDevice(buoyancy, buoyancyGpu, 0, sizeof(float)* 4 * numParticles);
+	copyArrayFromDevice(buoyancyAng, buoyancyAngGpu, 0, sizeof(float)* 4 * numParticles);
+
 	float* force = new float[4];
+	
 	for (int i = 0; i < numParticles; i++)
 	{
-		force[0] += pushForceHost[i * 4];
-		force[1] += pushForceHost[i * 4 + 1];
-		force[2] += pushForceHost[i * 4 + 2];
+		force[0] += buoyancy[i * 4];
+		force[1] += buoyancy[i * 4 + 1];
+		force[2] += buoyancy[i * 4 + 2];
 		force[3] = 0;
+
+		Vector3 ang = Vector3(buoyancyAng[i * 4], buoyancyAng[i * 4 + 1], buoyancyAng[i * 4 + 2]);
+		if (ang.x != 0 || ang.y != 0 || ang.z != 0)
+		{
+			orientation = orientation + orientation * (ang / 20000000.0f);
+			orientation.Normalise();
+		}
 	}
 	force[1] -= 9.81f * 2000.0f;
 	for (int i = 0; i < 4; i++)
 	{
 		solidVel[i] = solidVel[i] + force[i] * mparams.timeStep;
 	}
-	CheckEdges(pos,solidVel);
-	copyArrayToDevice(solidPos, pos, 0, 4 * sizeof(float));
+	CheckEdges(solidPos, solidVel);
+	copyArrayToDevice(solidPosGpu, solidPos, 0, 4 * sizeof(float));
+	copyArrayToDevice(solidVelGpu, solidVel, 0, 4 * sizeof(float));
+
+	//orientation.Normalise();
+	Matrix4 m = orientation.ToMatrix();
+	Vector3 p = Vector3(solidPos[0], solidPos[1], solidPos[2]);
+	m.SetPositionVector(p);
+	return m;
 }
 
 void Particles::CheckEdges(float* pos,float* vel)

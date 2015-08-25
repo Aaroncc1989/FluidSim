@@ -1,5 +1,6 @@
 #pragma once
 #include "Parameters.cuh"
+#include "../../nclgl/Quaternion.h"
 
 enum ParticleArray
 {
@@ -27,7 +28,7 @@ public:
 	SimParams mparams;
 
 	void InitSolid();
-	void GetSolidPos(float* host);
+	Matrix4 BuildTransform();
 	void CheckEdges(float* pos,float* vel);
 
 protected:
@@ -40,9 +41,8 @@ protected:
 	float* density;
 	float* normal;
 	float* textureCoord;
-	float* pushForceHost;
+
 	//gpu data
-	float* pushForce;
 	float* velGpu;
 	float* posGpu;
 	float* sortedPos;
@@ -61,7 +61,14 @@ protected:
 	struct cudaGraphicsResource *m_cuda_colorvbo_resource; // handles OpenGL-CUDA exchange
 
 	//solid data
+	Quaternion orientation;
 	float* solidPos;
 	float* solidVel;
+	float* solidPosGpu;
+	float* solidVelGpu;
+	float* buoyancy;
+	float* buoyancyGpu;
+	float* buoyancyAng;
+	float* buoyancyAngGpu;
 };
 

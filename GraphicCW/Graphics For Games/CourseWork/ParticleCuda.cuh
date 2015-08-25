@@ -43,7 +43,7 @@ extern "C"
 		uint  *gridParticleIndex,
 		uint  *cellStart,
 		uint  *cellEnd,
-		uint   numParticles, float *pushForce, float *solidPos);
+		uint   numParticles, float *solidPos, float *solidVel,float *buoyancy,float *buoyancyAng);
 
 
 	void sortParticles(uint *dGridParticleHash, uint *dGridParticleIndex, uint numParticles);

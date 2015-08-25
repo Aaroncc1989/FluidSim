@@ -1,9 +1,30 @@
-﻿Build started 17/08/2015 14:15:16.
+﻿Build started 25/08/2015 01:02:54.
      1>Project "D:\Github\FluidSim\GraphicCW\nclgl\nclgl.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt CubeRobot.cpp OBJMesh.cpp
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Camera.cpp CubeRobot.cpp Frustum.cpp HeightMap.cpp MD5Anim.cpp MD5FileData.cpp MD5Mesh.cpp MD5Node.cpp Mesh.cpp OBJMesh.cpp OGLRenderer.cpp ParticleEmitter.cpp Quaternion.cpp SceneNode.cpp Shader.cpp TextMesh.cpp TreeMesh.cpp Window.cpp
+         Camera.cpp
          CubeRobot.cpp
+         Frustum.cpp
+         HeightMap.cpp
+         MD5Anim.cpp
+         MD5FileData.cpp
+         MD5Mesh.cpp
+         MD5Node.cpp
+         Mesh.cpp
          OBJMesh.cpp
+         OGLRenderer.cpp
+         ParticleEmitter.cpp
+         Quaternion.cpp
+         SceneNode.cpp
+         Shader.cpp
+         TextMesh.cpp
+         TreeMesh.cpp
+     1>TreeMesh.cpp(37): warning C4244: 'argument' : conversion from 'double' to 'const float', possible loss of data
+     1>TreeMesh.cpp(47): warning C4244: 'argument' : conversion from 'double' to 'const float', possible loss of data
+     1>TreeMesh.cpp(54): warning C4018: '<' : signed/unsigned mismatch
+     1>TreeMesh.cpp(129): warning C4018: '<' : signed/unsigned mismatch
+     1>TreeMesh.cpp(322): warning C4018: '<' : signed/unsigned mismatch
+         Window.cpp
        Lib:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\Github\FluidSim\GraphicCW\Graphics For Games\Release\nclgl.lib" /NOLOGO /LTCG Release\Camera.obj
          Release\CubeRobot.obj
@@ -33,4 +54,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.62
+Time Elapsed 00:00:08.34

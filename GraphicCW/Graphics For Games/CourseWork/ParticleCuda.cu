@@ -189,7 +189,7 @@ extern "C"
 		uint  *gridParticleIndex,
 		uint  *cellStart,
 		uint  *cellEnd,
-		uint   numParticles,float *pushForce,float *solidPos)
+		uint   numParticles, float *solidPos, float *solidVel, float *buoyancy, float *buoyancyAng)
 	{
 		// thread per particle
 		uint numThreads, numBlocks;
@@ -217,12 +217,10 @@ extern "C"
 		getLastCudaError("Kernel execution failed");
 
 		interAct << < numBlocks, numThreads >> >((float4 *)newVel, 
-			(float4 *)pushForce,
-			(float4 *)solidPos,
 			(float4 *)sortedPos,
 			(float4 *)sortedVel,
 			gridParticleIndex,
-			numParticles);
+			numParticles, (float4 *)solidPos, (float4 *)solidVel, (float4 *)buoyancy, (float4 *)buoyancyAng);
 
 		getLastCudaError("Kernel execution failed");
 	}

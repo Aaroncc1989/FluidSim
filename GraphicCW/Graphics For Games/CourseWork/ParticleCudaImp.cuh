@@ -380,8 +380,9 @@ uint    numParticles)
 __device__
 float3 collideSpheres(float3 posA, float3 posB,
 float3 velA, float3 velB,
-float solidRadius)
+float3 &angVel)
 {
+	float solidRadius = 10.0f;
 	// calculate relative position
 	float3 relPos = posB - posA;
 
@@ -402,6 +403,8 @@ float solidRadius)
 
 		// spring force
 		force = -params.spring*(collideDist - dist) * norm;
+
+		angVel = cross(norm, tanVel);
 		// dashpot (damping) force
 		//force += params.damping*relVel;
 		// tangential shear force
@@ -415,12 +418,10 @@ float solidRadius)
 
 
 __global__ void interAct(float4* newVel,
-	float4* pushForce,
-	float4* solidPos,
 	float4* oldPos,
 	float4* oldVel, 
 	uint   *gridParticleIndex,
-	uint numParticles)
+	uint numParticles, float4 *solidPos, float4 *solidVel, float4 *buoyancy, float4 *buoyancyAng)
 {
 	uint index = __mul24(blockIdx.x, blockDim.x) + threadIdx.x;
 
@@ -433,10 +434,12 @@ __global__ void interAct(float4* newVel,
 	int3 gridPos = calcGridPos(pos);
 	float3 force = make_float3(0.0f);
 
-	force += collideSpheres(pos,make_float3(solidPos[0]),vel,make_float3(0.0f),10.0f);
-	pushForce[index] = make_float4(-force,0);
+	float3 angVel = make_float3(0.0f);
+	force += collideSpheres(pos, make_float3(*solidPos), vel, make_float3(*solidVel), angVel);
 
 	uint originalIndex = gridParticleIndex[index];
+	buoyancy[originalIndex] = make_float4(-force, 0);
+	buoyancyAng[originalIndex] = make_float4(angVel, 0);
 	newVel[originalIndex] = newVel[originalIndex] + make_float4(force, 0);
 }
 

@@ -17,10 +17,15 @@ out Vertex{
 
 void main(void) {
 	vec4 posEye = viewMatrix * modelMatrix * vec4(position.xyz, 1.0);
-	
+
 	float dist = length(vec3(posEye));
 	gl_PointSize = pointRadius * 24000.0f / dist;
-	//if (position.w <= 3.0f){ gl_PointSize /= 5.0f; }
+	float density = position.w;
+	if (density > 5.0f)
+	{
+		density = 5.0f;
+	}
+	gl_PointSize = gl_PointSize * density / 5.0f;
 
 	OUT.eyespaceRadius = gl_PointSize;
 	gl_Position = projMatrix * posEye;

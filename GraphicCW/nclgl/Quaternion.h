@@ -2,19 +2,19 @@
 Class:Quaternion
 Implements:
 Author:Rich Davison
-Description:VERY simple Quaternion class. Students are encouraged to modify 
+Description:VERY simple Quaternion class. Students are encouraged to modify
 this as necessary...if they dare.
 
-Quaternions aren't really discussed much in the graphics module, but the 
+Quaternions aren't really discussed much in the graphics module, but the
 MD5Mesh class uses them internally, as MD5 files store their rotations
 as quaternions.
 
 I hate Quaternions.
 
--_-_-_-_-_-_-_,------,   
+-_-_-_-_-_-_-_,------,
 _-_-_-_-_-_-_-|   /\_/\   NYANYANYAN
 -_-_-_-_-_-_-~|__( ^ .^) /
-_-_-_-_-_-_-_-""  ""   
+_-_-_-_-_-_-_-""  ""
 
 *//////////////////////////////////////////////////////////////////////////////
 
@@ -57,8 +57,12 @@ public:
 	Quaternion operator *(const Quaternion &a) const;
 	Quaternion operator *(const Vector3 &a) const;
 
+	Quaternion operator+(const Quaternion &a) const {
+		return Quaternion(x + a.x, y + a.y, z + a.z, w + a.w);
+	}
+
 	inline friend std::ostream& operator<<(std::ostream& o, const Quaternion& q){
-		o << "Quat(" << q.x << "," << q.y << "," << q.z <<  "," << q.w << ")" << std::endl;
+		o << "Quat(" << q.x << "," << q.y << "," << q.z << "," << q.w << ")" << std::endl;
 		return o;
 	}
 };
