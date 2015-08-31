@@ -8,6 +8,11 @@ uniform vec2 pixelSize;
 uniform mat4 projMatrix;
 uniform mat4 viewMatrix;
 
+uniform vec3 cameraPos;
+uniform float lightRadius;
+uniform vec3 lightPos;
+uniform vec4 lightColour;
+
 in vec2 coords;
 in mat3 normalMatrix;
 in mat3 eyeNormalMatrix;
@@ -69,9 +74,9 @@ void main(void){
 	float thickness = texture(thicknessTex, coords);
 	//calculate normal
 	vec3 normal = eyespaceNormal(coords);
-	//normal = normalize(eyeNormalMatrix*normal);
-	//normal = normalize(normalMatrix * normal);
 	normal = normalize(transpose(mat3(viewMatrix)) * normal);
+
+
 
 	vec3 lightDir = vec3(0.577f, -0.577f, 0.577f);
 	thickness /= 5.0f;

@@ -3,7 +3,8 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	camera = new Camera(0.0f, 0.0f, Vector3(
 		RAW_WIDTH * HEIGHTMAP_X / 2.0f, 500, RAW_HEIGHT * HEIGHTMAP_Z/3.0f));
 
-	//camera = new Camera(0.0f, 0.0f, Vector3(50, 50, -100));
+	light = new Light(Vector3(-450.0f, 200.0f, 280.0f), Vector4(1, 1, 1, 1), 5500.0f);
+	SetShaderLight(*light);
 
 	particle = new Particles();
 	particle->Init();
@@ -221,9 +222,12 @@ void Renderer::DrawFluid()
 	SetCurrentShader(fluidShader);
 	glUseProgram(currentShader->GetProgram());
 	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
+	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(),"cameraPos"), 1, (float *)& camera->GetPosition());
+
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float*)&projMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false, (float*)&viewMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*)&modelMatrix);
+	
 
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, bufferColourTex[THICKNESS]);
@@ -234,7 +238,7 @@ void Renderer::DrawFluid()
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "pixelDepthTex"), 3);
 
 	if (smoothSwitch) quad->SetTexture(bufferColourTex[SMOOTH0]);
-	else quad->SetTexture(bufferColourTex[PARTICLE]);
+	else quad->SetTexture(bufferColourTex[PARTICLE]);	
 
 	quad->Draw();
 	glUseProgram(0);
