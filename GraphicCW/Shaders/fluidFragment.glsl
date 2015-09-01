@@ -2,7 +2,6 @@
 
 uniform sampler2D diffuseTex;
 uniform sampler2D thicknessTex;
-uniform sampler2D pixelDepthTex;
 
 uniform vec2 pixelSize;
 uniform mat4 projMatrix;
@@ -14,8 +13,7 @@ uniform vec3 lightPos;
 uniform vec4 lightColour;
 
 in vec2 coords;
-in mat3 normalMatrix;
-in mat3 eyeNormalMatrix;
+in mat4 inverseProjView;
 out vec4 gl_FragColor;
 
 
@@ -51,6 +49,9 @@ vec3 eyespaceNormal(vec2 pos) {
 	return normalize(cross(pdx, pdy));
 }
 
+float projectZ(float z, float near, float far) {
+	return far*(z + near) / (z*(far - near));
+}
 
 float fresnel(float rr1, float rr2, vec3 n, vec3 d) {
 	float r = rr1 / rr2;
@@ -66,24 +67,43 @@ float fresnel(float rr1, float rr2, vec3 n, vec3 d) {
 }
 
 void main(void){
-	float depth = texture(diffuseTex, coords);
-	if (depth == 0.0f){ discard; }
+	float z = texture(diffuseTex, coords);
+	if (z == 0.0f){ discard; }
+	float depth = projectZ(z, 1.0f, 10000.0f);
+	gl_FragDepth = depth;
 
-	gl_FragDepth = texture(pixelDepthTex, coords);
-
-	float thickness = texture(thicknessTex, coords);
 	//calculate normal
 	vec3 normal = eyespaceNormal(coords);
 	normal = normalize(transpose(mat3(viewMatrix)) * normal);
 
+	vec3 pos = vec3((gl_FragCoord.x * pixelSize.x),
+		(gl_FragCoord.y * pixelSize.y), 0.0);
+	pos.z = depth;
 
+	vec4 clip = inverseProjView * vec4(pos * 2.0 - 1.0, 1.0);
+	pos = clip.xyz / clip.w;
+	float dist = length(lightPos - pos);
+	float atten = 1.0 - clamp(dist / lightRadius, 0.0, 1.0);
+	if (atten == 0.0) {
+		discard;
+	}
 
-	vec3 lightDir = vec3(0.577f, -0.577f, 0.577f);
+	vec3 incident = normalize(lightPos - pos);
+	vec3 viewDir = normalize(cameraPos - pos);
+	vec3 halfDir = normalize(incident + viewDir);
+
+	float lambert = clamp(dot(incident, normal), 0.0, 1.0);
+	float rFactor = clamp(dot(halfDir, normal), 0.0, 1.0);
+	float sFactor = pow(rFactor, 33.0);
+
+	float thickness = texture(thicknessTex, coords);
 	thickness /= 5.0f;
-	vec4 particleColor = vec4(exp(-0.6f*thickness), exp(-0.2f*thickness), exp(-0.05f*thickness), 1 - exp(-3.0f*thickness));
-	float lambert = abs(dot(normal, lightDir)) * 0.5f+0.5f;
+	vec4 diffuse = vec4(exp(-0.6f*thickness), exp(-0.2f*thickness), exp(-0.05f*thickness), 1 - exp(-3.0f*thickness));
 
-	gl_FragColor = vec4(lambert * particleColor.xyz * 0.8f + particleColor.xyz * 0.2, 0.9f);
+	gl_FragColor.xyz = diffuse.xyz * 0.2;
+	gl_FragColor.xyz += diffuse.xyz * lightColour.xyz * lambert * atten;
+	gl_FragColor.xyz += lightColour.xyz * sFactor * atten * 0.33f;
+	gl_FragColor.w = diffuse.w;
 	//gl_FragColor = vec4(normal, 1.0f);
 	//gl_FragColor = vec4(vec3(depth), 1.0f);
 }
