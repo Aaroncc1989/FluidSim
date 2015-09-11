@@ -46,7 +46,7 @@ public:
 	static Mouse*		GetMouse()		{return mouse;}
 
 	GameTimer*   GetTimer()		{return timer;}
-
+	void SetWindowTitle(std::string t);
 protected:
 	void	CheckMessages(MSG &msg);
 	static LRESULT CALLBACK WindowProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam);

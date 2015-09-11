@@ -22,10 +22,21 @@ int main(int argc, char **argv) {
 
 	w.LockMouseToWindow(true);
 	w.ShowOSPointer(false);
-
+	float timesum = 0;
+	int fps = 0;
 	while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)){
-		renderer.UpdateScene(w.GetTimer()->GetTimedMS());
+		float t = w.GetTimer()->GetTimedMS();
+		timesum += t;
+		fps += 1;
+		renderer.UpdateScene(t);
 		renderer.RenderScene();
+		if (timesum >= 1000.0f)
+		{
+			w.SetWindowTitle("FluidSimulation! fps:"+std::to_string(fps));
+			timesum -= 1000.0f;
+			fps = 0;
+		}
+		
 	}
 
 	return 0;

@@ -44,7 +44,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 
 	GenerateBuffers();
 	init = true;
-	smoothSwitch = false;
+	smoothSwitch = true;
 	tmp = 120;
 }
 Renderer ::~Renderer(void) {
@@ -111,7 +111,8 @@ void Renderer::Drawbg()
 	ground->Draw();
 	//build solid modelMatrix
 
-	Matrix4 trans = particle->BuildTransform();
+	Matrix4 trans;
+	trans = particle->BuildTransform();
 
 	modelMatrix = Matrix4::Translation(Vector3(-320, 0, -1280)) * Matrix4::Scale(Vector3(10, 10, 10)) *  Matrix4::Rotation(0, Vector3(1.f, 0, 0));
 	modelMatrix = modelMatrix * trans * Matrix4::Scale(Vector3(10, 10, 10));

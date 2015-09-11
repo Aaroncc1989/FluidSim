@@ -183,7 +183,7 @@ void Particles::InitParams()
 	mparams.timeStep = 0.001f;
 	mparams.boundaryDamping = -0.5f;
 	mparams.globalDamping = 1.0f;
-	numParticles = 400000;
+	numParticles = 300000;
 
 	//fluid coeffecient
 	mparams.cutoffdist = 1.0f;

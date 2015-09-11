@@ -82,7 +82,7 @@ Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen)	{
 			return;
 		}
 	}
-
+	
 	windowHandle = CreateWindowEx(fullScreen ? WS_EX_TOPMOST : NULL,
 	WINDOWCLASS,    // name of the window class
 	title.c_str(),   // title of the window
@@ -321,4 +321,12 @@ void	Window::ShowOSPointer(bool show)	{
 	else{
 		ShowCursor(0);
 	}
+}
+
+void Window::SetWindowTitle(std::string t)
+{
+	if (windowHandle)
+	{
+		SetWindowText(windowHandle,t.c_str());
+	}	
 }
